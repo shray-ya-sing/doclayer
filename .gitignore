@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.pptx
+*.log
+.env
+.DS_Store
+
