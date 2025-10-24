@@ -1,0 +1,125 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|c:\\users\\shrey\\projects\\doclayer\\src\\doclayer.core\\doclayer.core\\presentationbuilder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|solutionrelative:doclayer.core\\presentationbuilder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|c:\\users\\shrey\\projects\\doclayer\\src\\doclayer.core\\doclayer.core\\presentationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|solutionrelative:doclayer.core\\presentationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|c:\\users\\shrey\\projects\\doclayer\\src\\doclayer.core\\doclayer.core\\openxmlextensions\\presentation\\presentationhelpermethods.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|solutionrelative:doclayer.core\\openxmlextensions\\presentation\\presentationhelpermethods.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|c:\\users\\shrey\\projects\\doclayer\\src\\doclayer.core\\doclayer.core\\openxmlextensions\\presentation\\presentationdocextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|solutionrelative:doclayer.core\\openxmlextensions\\presentation\\presentationdocextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|c:\\users\\shrey\\projects\\doclayer\\src\\doclayer.core\\doclayer.core\\openxmlextensions\\presentation\\presentationextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|solutionrelative:doclayer.core\\openxmlextensions\\presentation\\presentationextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|c:\\users\\shrey\\projects\\doclayer\\src\\doclayer.core\\doclayer.core\\doclayer.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{F10B9BB1-3433-423B-8F08-64701F8004B7}|DocLayer.Core\\DocLayer.Core.csproj|solutionrelative:doclayer.core\\doclayer.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 163,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PresentationDocExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationDocExtensions.cs",
+              "RelativeDocumentMoniker": "DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationDocExtensions.cs",
+              "ToolTip": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationDocExtensions.cs",
+              "RelativeToolTip": "DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationDocExtensions.cs",
+              "ViewState": "AgIAAJEAAAAAAAAAAAAcwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T08:19:46.492Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PresentationHelperMethods.cs",
+              "DocumentMoniker": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationHelperMethods.cs",
+              "RelativeDocumentMoniker": "DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationHelperMethods.cs",
+              "ToolTip": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationHelperMethods.cs",
+              "RelativeToolTip": "DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationHelperMethods.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABEAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T08:06:00.954Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PresentationExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationExtensions.cs",
+              "RelativeDocumentMoniker": "DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationExtensions.cs",
+              "ToolTip": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationExtensions.cs",
+              "RelativeToolTip": "DocLayer.Core\\OpenXMLExtensions\\Presentation\\PresentationExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T08:05:53.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DocLayer.Core.csproj",
+              "DocumentMoniker": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\DocLayer.Core.csproj",
+              "RelativeDocumentMoniker": "DocLayer.Core\\DocLayer.Core.csproj",
+              "ToolTip": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\DocLayer.Core.csproj",
+              "RelativeToolTip": "DocLayer.Core\\DocLayer.Core.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-24T07:56:28.06Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PresentationBuilder.cs",
+              "DocumentMoniker": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\PresentationBuilder.cs",
+              "RelativeDocumentMoniker": "DocLayer.Core\\PresentationBuilder.cs",
+              "ToolTip": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\PresentationBuilder.cs",
+              "RelativeToolTip": "DocLayer.Core\\PresentationBuilder.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAQwCEAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T08:11:03.313Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PresentationHelper.cs",
+              "DocumentMoniker": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\PresentationHelper.cs",
+              "RelativeDocumentMoniker": "DocLayer.Core\\PresentationHelper.cs",
+              "ToolTip": "C:\\Users\\shrey\\projects\\doclayer\\src\\DocLayer.Core\\DocLayer.Core\\PresentationHelper.cs",
+              "RelativeToolTip": "DocLayer.Core\\PresentationHelper.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAqwBgAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T08:06:46.599Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

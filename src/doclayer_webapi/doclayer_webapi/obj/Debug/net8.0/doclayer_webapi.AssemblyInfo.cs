@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("doclayer_webapi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5817ea5ef377f876405526ccf91ac3850a4af6b6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bdf9fe40d785729ec56d451e6608a5fd12e964f0")]
 [assembly: System.Reflection.AssemblyProductAttribute("doclayer_webapi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("doclayer_webapi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

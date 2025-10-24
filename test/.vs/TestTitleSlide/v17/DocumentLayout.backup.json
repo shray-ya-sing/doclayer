@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\shrey\\projects\\doclayer\\test\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{80515B11-609C-3748-AF63-B568A2C701AC}|TestTitleSlide.csproj|c:\\users\\shrey\\projects\\doclayer\\test\\testtitleslide\\testtitlelayoutslide.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80515B11-609C-3748-AF63-B568A2C701AC}|TestTitleSlide.csproj|solutionrelative:testtitleslide\\testtitlelayoutslide.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TestTitleLayoutSlide.cs",
+              "DocumentMoniker": "C:\\Users\\shrey\\projects\\doclayer\\test\\TestTitleSlide\\TestTitleLayoutSlide.cs",
+              "RelativeDocumentMoniker": "TestTitleSlide\\TestTitleLayoutSlide.cs",
+              "ToolTip": "C:\\Users\\shrey\\projects\\doclayer\\test\\TestTitleSlide\\TestTitleLayoutSlide.cs",
+              "RelativeToolTip": "TestTitleSlide\\TestTitleLayoutSlide.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAzwBEAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T08:31:38.151Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
