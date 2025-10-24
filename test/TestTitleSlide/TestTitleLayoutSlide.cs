@@ -7,7 +7,7 @@ namespace DocLayer.Core.Examples
     {
         public static void Run()
         {
-            string outputPath = "C:\\Users\\shrey\\projects\\doclayer\\test\\test_outputs\\test_title_layout_slide.pptx";
+            string outputPath = "test_outputs\\test_title_layout_slide.pptx";
 
             using (var presentationDoc = PresentationHelper.CreatePresentation(outputPath, widescreen: true)) 
             {
