@@ -40,15 +40,63 @@ namespace DocLayer.Core
             var slide = _presentationDoc.GetLastSlide();
 
             // Add title and subtitle text
-            slide.AddTitle("Welcome to DocLayer");
-            slide.AddSubtitle("Simplifying PowerPoint Generation for AI Agents");
+            slide.AddTitle(title);
+            if (!string.IsNullOrEmpty(subtitle))
+            {
+                slide.AddSubtitle(subtitle);
+            }
 
             // Optionally add a footnote
-            slide.AddFootnote("Source: DocLayer.Core");
+            if (!string.IsNullOrEmpty(footnote))
+            {
+                slide.AddFootnote(footnote);
+            }
 
             // Save the presentation
             _presentationDoc.Save();
+        }
 
+        /// <summary>
+        /// Sets the presentation theme with custom fonts and colors
+        /// </summary>
+        /// <param name="fontName">Font typeface name (e.g., "Arial", "Calibri") - optional</param>
+        /// <param name="accentColors">List of 4 hex color codes for accent colors (e.g., "4472C4") - optional</param>
+        public void SetPresentationTheme(string? fontName = null, List<string>? accentColors = null)
+        {
+            // Get the theme from the first slide master
+            var slideMasterPart = _presentationPart.SlideMasterParts.FirstOrDefault()
+                ?? throw new InvalidOperationException("No slide master found in presentation");
+            
+            var themePart = slideMasterPart.ThemePart
+                ?? throw new InvalidOperationException("No theme part found in slide master");
+            
+            var theme = themePart.Theme;
+
+            // Set font if provided
+            if (!string.IsNullOrEmpty(fontName))
+            {
+                if (fontName.Equals("Arial", StringComparison.OrdinalIgnoreCase))
+                {
+                    theme.SetFontSchemeArial();
+                }
+                else
+                {
+                    theme.SetCustomFontScheme(fontName);
+                }
+            }
+
+            // Set accent colors if provided (must be exactly 4 colors)
+            if (accentColors != null && accentColors.Count > 0)
+            {
+                if (accentColors.Count != 4)
+                {
+                    throw new ArgumentException("Must provide exactly 4 accent colors", nameof(accentColors));
+                }
+                theme.SetAccentColors(accentColors);
+            }
+
+            // Save changes
+            theme.Save();
         }
 
         #region Helper Methods
