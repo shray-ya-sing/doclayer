@@ -1,10 +1,10 @@
 # DocLayer
 
-A cross-platform library for generating PowerPoint presentations programmatically using OpenXML. DocLayer provides both C# and Python APIs for creating PPTX files with support for themes, slides, shapes, and text formatting.
+A cross-platform library for generating PowerPoint presentations programmatically using OpenXML. DocLayer provides C#, Python, and TypeScript/Node.js APIs for creating PPTX files with support for themes, slides, shapes, and text formatting.
 
 ## Overview
 
-DocLayer Core is built on .NET 8.0 and leverages DocumentFormat.OpenXml to create PowerPoint files without requiring Microsoft Office. The library includes Python bindings via pythonnet for seamless integration with Python applications and AI agent frameworks.
+DocLayer Core is built on .NET 8.0 and leverages DocumentFormat.OpenXml to create PowerPoint files without requiring Microsoft Office. The library includes Python bindings via pythonnet and a TypeScript/Node.js wrapper for seamless integration with Python applications, Node.js services, and AI agent frameworks.
 
 ## Features
 
@@ -12,6 +12,7 @@ DocLayer Core is built on .NET 8.0 and leverages DocumentFormat.OpenXml to creat
 - Set presentation themes with custom fonts and accent colors
 - Cross-platform support (Windows, macOS, Linux via .NET)
 - Python wrapper for easy integration with AI agents and data science workflows
+- TypeScript/Node.js wrapper for JavaScript/TypeScript applications
 - Support for footnotes and slide elements
 - Built on industry-standard OpenXML format
 
@@ -46,6 +47,21 @@ Requirements:
 - Python 3.8 or higher
 - .NET 8.0 Runtime
 - pythonnet 3.0.0 or higher
+
+### TypeScript / Node.js
+
+Install the TypeScript wrapper:
+
+```bash
+cd typescript-wrapper
+npm install
+npm run build
+```
+
+Requirements:
+- Node.js 16.0 or higher
+- Python 3.8+ with doclayer_python package installed
+- .NET 8.0 Runtime
 
 ## Usage
 
@@ -123,6 +139,34 @@ with client.create_presentation("advanced.pptx") as pres:
     shapes.add_textbox("Revenue: $2.5M", 1, 1)
 ```
 
+### TypeScript / Node.js Example
+
+```typescript
+import { createTitleSlide, createPresentationWithTheme } from '@doclayer/typescript';
+
+// Create a simple title slide
+const buffer = await createTitleSlide(
+  'presentation.pptx',
+  'Welcome to DocLayer',
+  'PowerPoint Generation from Node.js',
+  'Source: DocLayer TypeScript Wrapper'
+);
+
+console.log(`Created presentation: ${buffer.length} bytes`);
+
+// Create presentation with custom theme
+const themedBuffer = await createPresentationWithTheme(
+  'custom_theme.pptx',
+  'Custom Theme Demo',
+  {
+    subtitle: 'Arial font with brand colors',
+    footnote: 'Source: My Company',
+    fontName: 'Arial',
+    accentColors: ['FF5733', '33FF57', '3357FF', 'F3FF33']
+  }
+);
+```
+
 ## API Reference
 
 ### C# API
@@ -147,6 +191,16 @@ Python client for interacting with DocLayer.Core.
 - `create_title_slide(filepath, title, subtitle=None, footnote="Source:")` - Creates a simple presentation with a title slide, returns bytes
 - `create_presentation(filepath)` - Returns a context manager for building complex presentations
 
+#### TypeScript API
+
+TypeScript/Node.js client that uses Python bridge to generate presentations.
+
+**Functions:**
+
+- `createTitleSlide(filepath, title, subtitle?, footnote?)` - Creates a simple presentation with a title slide, returns Promise<Buffer>
+- `createPresentationWithTheme(filepath, title, options?)` - Creates presentation with custom theme (font and 4 accent colors), returns Promise<Buffer>
+- `DocLayerClient` - Main client class with environment checking and configuration options
+
 ## Project Structure
 
 ```
@@ -160,6 +214,11 @@ doclayer/
 ├── python-wrapper/             # Python bindings
 │   ├── doclayer_python/
 │   ├── setup.py
+│   └── README.md
+├── typescript-wrapper/         # TypeScript/Node.js bindings
+│   ├── src/
+│   ├── test/
+│   ├── package.json
 │   └── README.md
 ├── examples/
 │   ├── python_example.py       # Python usage examples
@@ -180,6 +239,11 @@ doclayer/
 ### Python Development
 - Python 3.8+
 - pythonnet 3.0.0+
+- .NET 8.0 Runtime
+
+### TypeScript/Node.js Development
+- Node.js 16.0+
+- Python 3.8+ with doclayer_python installed
 - .NET 8.0 Runtime
 
 ## Use Cases
@@ -203,6 +267,14 @@ dotnet test
 ```bash
 cd python-wrapper
 python test_wrapper.py
+```
+
+### TypeScript Tests
+```bash
+cd typescript-wrapper
+npm install
+npm run build
+npm test
 ```
 
 ## Contributing
