@@ -7,7 +7,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name="doclayer-python",
+    name="doclayer-py",
     version="0.1.0",
     author="Your Name",
     author_email="your.email@example.com",

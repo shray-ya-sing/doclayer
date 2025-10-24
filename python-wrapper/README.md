@@ -1,11 +1,19 @@
-# DocLayer Python Wrapper
+# doclayer-py
 
 Python bindings for the DocLayer.Core C# library, enabling PowerPoint generation from Python.
 
 ## Installation
 
 ```bash
+pip install doclayer-py
+```
+
+Or install from source:
+
+```bash
+cd python-wrapper
 pip install pythonnet>=3.0.0
+pip install -e .
 ```
 
 ## Usage

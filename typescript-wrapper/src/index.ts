@@ -47,7 +47,7 @@ export class DocLayerClient {
     // Default to system Python
     this.pythonPath = options.pythonPath || 'python';
     
-    // Default to python-wrapper in parent directory
+    // Default to python-wrapper directory in parent (for source installations)
     this.pythonWrapperPath = options.pythonWrapperPath || 
       path.join(__dirname, '..', '..', 'python-wrapper');
     

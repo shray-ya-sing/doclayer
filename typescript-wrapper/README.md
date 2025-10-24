@@ -5,21 +5,21 @@ TypeScript/JavaScript bindings for the DocLayer PowerPoint generation library. T
 ## Installation
 
 ```bash
-npm install @doclayer/typescript
+npm install @doclayer/ts
 ```
 
 ## Requirements
 
 - Node.js >= 16.0.0
 - Python 3.8+ with `pythonnet` package installed
-- DocLayer Python wrapper
+- `doclayer-py` Python package
 
 ## Usage
 
 ### Basic Title Slide
 
 ```typescript
-import { createTitleSlide } from '@doclayer/typescript';
+import { createTitleSlide } from '@doclayer/ts';
 
 // Create a presentation with a title slide
 const buffer = await createTitleSlide(
@@ -35,7 +35,7 @@ console.log(`Created presentation: ${buffer.length} bytes`);
 ### Presentation with Custom Theme
 
 ```typescript
-import { createPresentationWithTheme } from '@doclayer/typescript';
+import { createPresentationWithTheme } from '@doclayer/ts';
 
 // Create a presentation with custom font and colors
 const buffer = await createPresentationWithTheme(
@@ -55,7 +55,7 @@ console.log(`Created themed presentation: ${buffer.length} bytes`);
 ### Using the Client
 
 ```typescript
-import { DocLayerClient } from '@doclayer/typescript';
+import { DocLayerClient } from '@doclayer/ts';
 
 const client = new DocLayerClient({
   pythonPath: 'python', // Optional: path to Python executable
@@ -133,7 +133,7 @@ Main client class for DocLayer operations.
 
 **Constructor options:**
 - `pythonPath` (string): Path to Python executable (default: "python")
-- `pythonWrapperPath` (string): Path to doclayer_python package
+- `pythonWrapperPath` (string): Path to doclayer_python package (for source installations)
 - `tempDir` (string): Temporary directory for intermediate files
 
 **Methods:**

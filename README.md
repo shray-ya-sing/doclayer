@@ -1,6 +1,6 @@
 # DocLayer
 
-A cross-platform library for generating PowerPoint presentations programmatically using OpenXML. DocLayer provides C#, Python, and TypeScript/Node.js APIs for creating PPTX files with support for themes, slides, shapes, and text formatting.
+A cross-platform library for generating PowerPoint presentations programmatically using OpenXML. DocLayer provides C#, Python (`doclayer-py`), and TypeScript/Node.js (`@doclayer/ts`) APIs for creating PPTX files with support for themes, slides, shapes, and text formatting.
 
 ## Overview
 
@@ -35,7 +35,13 @@ dotnet build
 
 ### Python
 
-Install the Python wrapper:
+Install the Python package:
+
+```bash
+pip install doclayer-py
+```
+
+Or install from source:
 
 ```bash
 cd python-wrapper
@@ -50,7 +56,13 @@ Requirements:
 
 ### TypeScript / Node.js
 
-Install the TypeScript wrapper:
+Install the TypeScript package:
+
+```bash
+npm install @doclayer/ts
+```
+
+Or install from source:
 
 ```bash
 cd typescript-wrapper
@@ -60,7 +72,7 @@ npm run build
 
 Requirements:
 - Node.js 16.0 or higher
-- Python 3.8+ with doclayer_python package installed
+- Python 3.8+ with `doclayer-py` package installed
 - .NET 8.0 Runtime
 
 ## Usage
@@ -142,7 +154,7 @@ with client.create_presentation("advanced.pptx") as pres:
 ### TypeScript / Node.js Example
 
 ```typescript
-import { createTitleSlide, createPresentationWithTheme } from '@doclayer/typescript';
+import { createTitleSlide, createPresentationWithTheme } from '@doclayer/ts';
 
 // Create a simple title slide
 const buffer = await createTitleSlide(
@@ -243,7 +255,7 @@ doclayer/
 
 ### TypeScript/Node.js Development
 - Node.js 16.0+
-- Python 3.8+ with doclayer_python installed
+- Python 3.8+ with `doclayer-py` installed
 - .NET 8.0 Runtime
 
 ## Use Cases

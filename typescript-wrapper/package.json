@@ -1,5 +1,5 @@
 {
-  "name": "@doclayer/typescript",
+  "name": "@doclayer/ts",
   "version": "0.1.0",
   "description": "TypeScript client library for DocLayer OOXML PowerPoint generation",
   "main": "dist/index.js",
