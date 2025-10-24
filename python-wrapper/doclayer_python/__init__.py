@@ -9,9 +9,19 @@ from typing import Dict, List, Optional, Union
 from pathlib import Path
 
 try:
+    from pathlib import Path as _Path
+    from clr_loader import get_coreclr
+    from pythonnet import set_runtime
+    
+    # Set up .NET runtime
+    _bin_path = _Path(__file__).parent / "bin"
+    _runtime = get_coreclr()
+    set_runtime(_runtime)
+    
     import clr
-    import pythonnet
-    pythonnet.load("coreclr")
+    # Add the bin directory to assembly search path
+    import sys
+    sys.path.append(str(_bin_path.absolute()))
 except ImportError:
     raise ImportError(
         "pythonnet is required. Install with: pip install pythonnet"
@@ -40,13 +50,22 @@ class DocLayerClient:
             if not dll_path.exists():
                 raise FileNotFoundError(f"DocLayer.Core.dll not found at {dll_path}")
             
-            # Add bin directory to assembly search path
+            # Store bin path for assembly resolver
+            self._bin_path = bin_path
+            
+            # Add bin directory to .NET assembly search path
             import System
             System.AppDomain.CurrentDomain.AssemblyResolve += self._assembly_resolver
             
-            clr.AddReference(str(dll_path.absolute()))
+            # Add all DLLs from bin directory
+            import sys
+            sys.path.append(str(bin_path.absolute()))
             
-            # Import .NET types
+            # Add references to key assemblies with full paths
+            clr.AddReference(str((bin_path / "DocumentFormat.OpenXml.dll").absolute()))
+            clr.AddReference(str((bin_path / "DocLayer.Core.dll").absolute()))
+            
+            # Now import the .NET namespaces
             from DocumentFormat.OpenXml.Packaging import PresentationDocument
             from DocumentFormat.OpenXml.Presentation import Slide
             from OpenXMLExtensions import SlideExtensions, ShapeTreeExtensions, PresentationExtensions, PresentationHelperMethods
@@ -60,10 +79,12 @@ class DocLayerClient:
             self.PresentationHelperMethods = PresentationHelperMethods
             self.PresentationBuilder = PresentationBuilder
             self.PresentationHelper = PresentationHelper
-            self._bin_path = bin_path
+            
             
         except Exception as e:
-            raise DocLayerError(f"Failed to load C# assembly: {e}")
+            import traceback
+            error_details = traceback.format_exc()
+            raise DocLayerError(f"Failed to load C# assembly: {e}\n\nDetails:\n{error_details}")
     
     def _assembly_resolver(self, sender, args):
         """Resolve assembly dependencies from bin directory"""
