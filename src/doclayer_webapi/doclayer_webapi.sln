@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "doclayer_webapi", "doclayer_webapi\doclayer_webapi.csproj", "{81FED5B8-5FF4-4458-BCF3-73C1C8D8F2EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81FED5B8-5FF4-4458-BCF3-73C1C8D8F2EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81FED5B8-5FF4-4458-BCF3-73C1C8D8F2EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81FED5B8-5FF4-4458-BCF3-73C1C8D8F2EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81FED5B8-5FF4-4458-BCF3-73C1C8D8F2EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {525BABC3-BA7F-4AF4-A58D-818DCCF5A8C7}
+	EndGlobalSection
+EndGlobal

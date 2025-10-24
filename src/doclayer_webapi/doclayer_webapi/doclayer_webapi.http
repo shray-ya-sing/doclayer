@@ -1,0 +1,6 @@
+@doclayer_webapi_HostAddress = http://localhost:5245
+
+GET {{doclayer_webapi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

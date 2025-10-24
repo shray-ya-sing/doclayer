@@ -1,0 +1,54 @@
+{
+  "name": "@doclayer/typescript",
+  "version": "0.1.0",
+  "description": "TypeScript client library for DocLayer OOXML PowerPoint generation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "powerpoint",
+    "pptx", 
+    "openxml",
+    "office",
+    "documents",
+    "ai",
+    "agents",
+    "typescript"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/doclayer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/doclayer/issues"
+  },
+  "homepage": "https://github.com/yourusername/doclayer#readme",
+  "files": [
+    "dist/**/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "cross-fetch": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@types/node": ">=16.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
