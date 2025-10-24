@@ -26,6 +26,29 @@ pptx_bytes = create_title_slide(
 print(f"Created presentation: {len(pptx_bytes)} bytes")
 ```
 
+### Presentation with Custom Theme
+
+```python
+from doclayer_python import create_presentation_with_theme
+
+# Create a presentation with custom font and colors
+pptx_bytes = create_presentation_with_theme(
+    filepath="custom_theme.pptx",
+    title="Custom Theme Demo",
+    subtitle="Arial font with brand colors",
+    footnote="Source: My Company",
+    font_name="Arial",
+    accent_colors=[
+        "FF5733",  # Red-Orange (Accent 1)
+        "33FF57",  # Green (Accent 2) 
+        "3357FF",  # Blue (Accent 3)
+        "F3FF33"   # Yellow (Accent 4)
+    ]
+)
+
+print(f"Created themed presentation: {len(pptx_bytes)} bytes")
+```
+
 ### Using the Client
 
 ```python
@@ -40,6 +63,14 @@ pptx_bytes = client.create_title_slide(
     title="My Presentation",
     subtitle="Created with Python",
     footnote="Source: My Data"
+)
+
+# Or create with custom theme
+pptx_bytes = client.create_presentation_with_theme(
+    filepath="themed.pptx",
+    title="Themed Presentation",
+    font_name="Calibri",
+    accent_colors=["4472C4", "ED7D31", "A5A5A5", "FFC000"]
 )
 ```
 

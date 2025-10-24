@@ -142,9 +142,81 @@ class DocLayerClient:
                 
         except Exception as e:
             raise DocLayerError(f"Failed to create title slide: {e}")
+    
+    def create_presentation_with_theme(
+        self,
+        filepath: str,
+        title: str,
+        subtitle: Optional[str] = None,
+        footnote: Optional[str] = "Source:",
+        font_name: Optional[str] = None,
+        accent_colors: Optional[List[str]] = None
+    ) -> bytes:
+        """
+        Create a PowerPoint presentation with custom theme and title slide
+        
+        Args:
+            filepath: Path where the presentation will be saved
+            title: Main title text
+            subtitle: Subtitle text (optional)
+            footnote: Footnote text (optional, defaults to "Source:")
+            font_name: Font typeface name (e.g., "Arial", "Calibri") - optional
+            accent_colors: List of 4 hex color codes for accent colors - optional
+            
+        Returns:
+            Bytes content of the created presentation file
+            
+        Example:
+            >>> pptx_bytes = client.create_presentation_with_theme(
+            ...     "presentation.pptx",
+            ...     title="Custom Theme",
+            ...     subtitle="With custom colors",
+            ...     font_name="Arial",
+            ...     accent_colors=["FF5733", "33FF57", "3357FF", "F3FF33"]
+            ... )
+        """
+        try:
+            # Create presentation using PresentationHelper
+            presentation_doc = self.PresentationHelper.CreatePresentation(filepath, True)
+            
+            try:
+                # Create PresentationBuilder
+                builder = self.PresentationBuilder(presentation_doc)
+                
+                # Set theme if any theme parameters provided
+                if font_name or accent_colors:
+                    # Convert Python list to .NET List for accent colors
+                    net_colors = None
+                    if accent_colors:
+                        if len(accent_colors) != 4:
+                            raise ValueError("Must provide exactly 4 accent colors")
+                        import System.Collections.Generic as Generic
+                        net_colors = Generic.List[str]()
+                        for color in accent_colors:
+                            net_colors.Add(color)
+                    
+                    builder.SetPresentationTheme(font_name, net_colors)
+                
+                # Create title slide
+                builder.CreateTitleSlide(title, subtitle, footnote)
+                
+                # Save and dispose
+                presentation_doc.Save()
+                presentation_doc.Dispose()
+                
+            except Exception as e:
+                presentation_doc.Dispose()
+                raise
+                
+            # Read and return file content
+            with open(filepath, 'rb') as f:
+                return f.read()
+                
+        except Exception as e:
+            raise DocLayerError(f"Failed to create presentation with theme: {e}")
 
 
-# Convenience function
+# Convenience functions
 def create_title_slide(
     filepath: str,
     title: str,
@@ -176,9 +248,48 @@ def create_title_slide(
     return client.create_title_slide(filepath, title, subtitle, footnote)
 
 
+def create_presentation_with_theme(
+    filepath: str,
+    title: str,
+    subtitle: Optional[str] = None,
+    footnote: Optional[str] = "Source:",
+    font_name: Optional[str] = None,
+    accent_colors: Optional[List[str]] = None
+) -> bytes:
+    """
+    Convenience function to create a presentation with custom theme
+    
+    Args:
+        filepath: Path where the presentation will be saved
+        title: Main title text
+        subtitle: Subtitle text (optional)
+        footnote: Footnote text (optional, defaults to "Source:")
+        font_name: Font typeface name (e.g., "Arial", "Calibri") - optional
+        accent_colors: List of 4 hex color codes for accent colors - optional
+        
+    Returns:
+        Bytes content of the created presentation file
+        
+    Example:
+        >>> from doclayer_python import create_presentation_with_theme
+        >>> pptx_bytes = create_presentation_with_theme(
+        ...     "custom.pptx",
+        ...     title="Custom Theme Demo",
+        ...     subtitle="With Arial and custom colors",
+        ...     font_name="Arial",
+        ...     accent_colors=["FF5733", "33FF57", "3357FF", "F3FF33"]
+        ... )
+    """
+    client = DocLayerClient()
+    return client.create_presentation_with_theme(
+        filepath, title, subtitle, footnote, font_name, accent_colors
+    )
+
+
 # Export public API
 __all__ = [
     'DocLayerClient',
     'create_title_slide',
+    'create_presentation_with_theme',
     'DocLayerError'
 ]
