@@ -1,5 +1,11 @@
+# Node.js / TypeScript
 node_modules/
 dist/
+*.tsbuildinfo
+.npm
+.eslintcache
+coverage/
+.nyc_output/
 *.pptx
 *.log
 .env
