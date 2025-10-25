@@ -635,7 +635,6 @@ namespace OpenXMLExtensions
                 if (transform.GetFirstChild<D.Extents>() != null)
                 {
                     D.Extents extents = transform.GetFirstChild<D.Extents>();
-                    Console.WriteLine("FOUND: " + extents.Cy.ToString());
                     if (extents.Cy != null)
                     {
                         Int64Value height = extents.Cy;

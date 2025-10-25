@@ -70,6 +70,7 @@ class DocLayerClient:
             from DocumentFormat.OpenXml.Presentation import Slide
             from OpenXMLExtensions import SlideExtensions, ShapeTreeExtensions, PresentationExtensions, PresentationHelperMethods
             from DocLayer.Core import PresentationBuilder, PresentationHelper
+            from DocLayer.Core.Models import SlideContentInfo
             
             self.PresentationDocument = PresentationDocument
             self.Slide = Slide
@@ -214,6 +215,180 @@ class DocLayerClient:
                 
         except Exception as e:
             raise DocLayerError(f"Failed to create presentation with theme: {e}")
+    
+    def get_slide_count(self, filepath: str) -> int:
+        """
+        Get the number of slides in a presentation
+        
+        Args:
+            filepath: Path to the presentation file
+            
+        Returns:
+            Number of slides
+        """
+        try:
+            builder = self.PresentationBuilder.FromFile(filepath, False)
+            try:
+                return builder.GetSlideCount()
+            finally:
+                builder.Dispose()
+        except Exception as e:
+            raise DocLayerError(f"Failed to get slide count: {e}")
+    
+    def extract_slide_content(self, filepath: str, slide_number: int) -> Dict:
+        """
+        Extract content from a specific slide
+        
+        Args:
+            filepath: Path to the presentation file
+            slide_number: Slide number (1-based index)
+            
+        Returns:
+            Dictionary with 'shapes' and 'pictures' lists containing element info
+        """
+        try:
+            builder = self.PresentationBuilder.FromFile(filepath, False)
+            try:
+                content = builder.ExtractSlideContent(slide_number)
+                
+                # Convert to Python dict
+                result = {
+                    'shapes': [],
+                    'pictures': []
+                }
+                
+                for shape in content.Shapes:
+                    shape_dict = {
+                        'name': shape.Name,
+                        'text': shape.Text
+                    }
+                    if shape.Position:
+                        shape_dict['position'] = {'x': shape.Position.X, 'y': shape.Position.Y}
+                    if shape.Size:
+                        shape_dict['size'] = {'width': shape.Size.Width, 'height': shape.Size.Height}
+                    result['shapes'].append(shape_dict)
+                
+                for picture in content.Pictures:
+                    pic_dict = {'name': picture.Name}
+                    if picture.Position:
+                        pic_dict['position'] = {'x': picture.Position.X, 'y': picture.Position.Y}
+                    if picture.Size:
+                        pic_dict['size'] = {'width': picture.Size.Width, 'height': picture.Size.Height}
+                    result['pictures'].append(pic_dict)
+                
+                return result
+            finally:
+                builder.Dispose()
+        except Exception as e:
+            raise DocLayerError(f"Failed to extract slide content: {e}")
+    
+    def extract_all_slides(self, filepath: str) -> Dict[int, Dict]:
+        """
+        Extract content from all slides in a presentation
+        
+        Args:
+            filepath: Path to the presentation file
+            
+        Returns:
+            Dictionary mapping slide numbers to their content
+        """
+        try:
+            builder = self.PresentationBuilder.FromFile(filepath, False)
+            try:
+                all_content = builder.ExtractAllSlides()
+                
+                result = {}
+                for slide_num in all_content.Keys:
+                    content = all_content[slide_num]
+                    
+                    slide_dict = {
+                        'shapes': [],
+                        'pictures': []
+                    }
+                    
+                    for shape in content.Shapes:
+                        shape_dict = {
+                            'name': shape.Name,
+                            'text': shape.Text
+                        }
+                        if shape.Position:
+                            shape_dict['position'] = {'x': shape.Position.X, 'y': shape.Position.Y}
+                        if shape.Size:
+                            shape_dict['size'] = {'width': shape.Size.Width, 'height': shape.Size.Height}
+                        slide_dict['shapes'].append(shape_dict)
+                    
+                    for picture in content.Pictures:
+                        pic_dict = {'name': picture.Name}
+                        if picture.Position:
+                            pic_dict['position'] = {'x': picture.Position.X, 'y': picture.Position.Y}
+                        if picture.Size:
+                            pic_dict['size'] = {'width': picture.Size.Width, 'height': picture.Size.Height}
+                        slide_dict['pictures'].append(pic_dict)
+                    
+                    result[slide_num] = slide_dict
+                
+                return result
+            finally:
+                builder.Dispose()
+        except Exception as e:
+            raise DocLayerError(f"Failed to extract all slides: {e}")
+    
+    def edit_slide_text(self, filepath: str, slide_number: int, element_name: str, new_text: str) -> None:
+        """
+        Edit the text of a shape on a slide
+        
+        Args:
+            filepath: Path to the presentation file
+            slide_number: Slide number (1-based index)
+            element_name: Name of the shape to edit
+            new_text: New text content
+        """
+        try:
+            builder = self.PresentationBuilder.FromFile(filepath, True)
+            try:
+                builder.EditSlideText(slide_number, element_name, new_text)
+                builder.Save()
+            finally:
+                builder.Dispose()
+        except Exception as e:
+            raise DocLayerError(f"Failed to edit slide text: {e}")
+    
+    def render_slide_to_image(self, filepath: str, slide_number: int) -> str:
+        """
+        Render a slide to a JPEG image
+        
+        Args:
+            filepath: Path to the presentation file
+            slide_number: Slide number (1-based index)
+            
+        Returns:
+            Path to the generated image file
+        """
+        try:
+            # Note: Document must be closed before rendering
+            from InternalUtilities.Syncfusion import SyncfusionHelperMethods
+            return SyncfusionHelperMethods.ExportSlideToImage(filepath, slide_number)
+        except Exception as e:
+            raise DocLayerError(f"Failed to render slide to image: {e}")
+    
+    def render_all_slides(self, filepath: str) -> List[str]:
+        """
+        Render all slides to JPEG images
+        
+        Args:
+            filepath: Path to the presentation file
+            
+        Returns:
+            List of paths to generated image files
+        """
+        try:
+            from InternalUtilities.Syncfusion import SyncfusionHelperMethods
+            import System.Collections.Generic as Generic
+            
+            images = SyncfusionHelperMethods.ExportPptToImages(filepath)
+            return [str(img) for img in images]
+        except Exception as e:
+            raise DocLayerError(f"Failed to render all slides: {e}")
 
 
 # Convenience functions

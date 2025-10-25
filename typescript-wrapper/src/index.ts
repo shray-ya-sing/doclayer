@@ -23,6 +23,34 @@ export interface PresentationWithThemeOptions extends TitleSlideOptions {
   theme?: ThemeOptions;
 }
 
+export interface Position {
+  x: number;
+  y: number;
+}
+
+export interface Size {
+  width: number;
+  height: number;
+}
+
+export interface ShapeInfo {
+  name: string;
+  text: string;
+  position?: Position;
+  size?: Size;
+}
+
+export interface PictureInfo {
+  name: string;
+  position?: Position;
+  size?: Size;
+}
+
+export interface SlideContent {
+  shapes: ShapeInfo[];
+  pictures: PictureInfo[];
+}
+
 export class DocLayerError extends Error {
   constructor(message: string, public code?: string) {
     super(message);
@@ -93,6 +121,240 @@ export class DocLayerClient {
     });
 
     return await this._executePythonScript(script, filepath);
+  }
+
+  /**
+   * Get the number of slides in a presentation
+   */
+  async getSlideCount(filepath: string): Promise<number> {
+    const script = `
+import sys
+sys.path.insert(0, r"${this.pythonWrapperPath}")
+from doclayer_python import DocLayerClient
+
+try:
+    client = DocLayerClient()
+    count = client.get_slide_count(r"${filepath}")
+    print(count)
+except Exception as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    sys.exit(1)
+`;
+
+    return new Promise((resolve, reject) => {
+      const python = spawn(this.pythonPath, ['-c', script]);
+      let stdout = '';
+      let stderr = '';
+
+      python.stdout.on('data', (data) => stdout += data.toString());
+      python.stderr.on('data', (data) => stderr += data.toString());
+
+      python.on('close', (code) => {
+        if (code === 0) {
+          resolve(parseInt(stdout.trim()));
+        } else {
+          reject(new DocLayerError(`Failed to get slide count: ${stderr}`, 'PYTHON_ERROR'));
+        }
+      });
+    });
+  }
+
+  /**
+   * Extract content from a specific slide
+   */
+  async extractSlideContent(filepath: string, slideNumber: number): Promise<SlideContent> {
+    const script = `
+import sys
+import json
+sys.path.insert(0, r"${this.pythonWrapperPath}")
+from doclayer_python import DocLayerClient
+
+try:
+    client = DocLayerClient()
+    content = client.extract_slide_content(r"${filepath}", ${slideNumber})
+    print(json.dumps(content))
+except Exception as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    sys.exit(1)
+`;
+
+    return new Promise((resolve, reject) => {
+      const python = spawn(this.pythonPath, ['-c', script]);
+      let stdout = '';
+      let stderr = '';
+
+      python.stdout.on('data', (data) => stdout += data.toString());
+      python.stderr.on('data', (data) => stderr += data.toString());
+
+      python.on('close', (code) => {
+        if (code === 0) {
+          try {
+            resolve(JSON.parse(stdout.trim()));
+          } catch (e) {
+            reject(new DocLayerError('Failed to parse slide content', 'PARSE_ERROR'));
+          }
+        } else {
+          reject(new DocLayerError(`Failed to extract slide content: ${stderr}`, 'PYTHON_ERROR'));
+        }
+      });
+    });
+  }
+
+  /**
+   * Extract content from all slides
+   */
+  async extractAllSlides(filepath: string): Promise<Record<number, SlideContent>> {
+    const script = `
+import sys
+import json
+sys.path.insert(0, r"${this.pythonWrapperPath}")
+from doclayer_python import DocLayerClient
+
+try:
+    client = DocLayerClient()
+    all_content = client.extract_all_slides(r"${filepath}")
+    print(json.dumps(all_content))
+except Exception as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    sys.exit(1)
+`;
+
+    return new Promise((resolve, reject) => {
+      const python = spawn(this.pythonPath, ['-c', script]);
+      let stdout = '';
+      let stderr = '';
+
+      python.stdout.on('data', (data) => stdout += data.toString());
+      python.stderr.on('data', (data) => stderr += data.toString());
+
+      python.on('close', (code) => {
+        if (code === 0) {
+          try {
+            resolve(JSON.parse(stdout.trim()));
+          } catch (e) {
+            reject(new DocLayerError('Failed to parse slides content', 'PARSE_ERROR'));
+          }
+        } else {
+          reject(new DocLayerError(`Failed to extract all slides: ${stderr}`, 'PYTHON_ERROR'));
+        }
+      });
+    });
+  }
+
+  /**
+   * Edit the text of a shape on a slide
+   */
+  async editSlideText(
+    filepath: string,
+    slideNumber: number,
+    elementName: string,
+    newText: string
+  ): Promise<void> {
+    const script = `
+import sys
+sys.path.insert(0, r"${this.pythonWrapperPath}")
+from doclayer_python import DocLayerClient
+
+try:
+    client = DocLayerClient()
+    client.edit_slide_text(r"${filepath}", ${slideNumber}, r"""${elementName}""", r"""${newText}""")
+    print("SUCCESS")
+except Exception as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    sys.exit(1)
+`;
+
+    return new Promise((resolve, reject) => {
+      const python = spawn(this.pythonPath, ['-c', script]);
+      let stderr = '';
+
+      python.stderr.on('data', (data) => stderr += data.toString());
+
+      python.on('close', (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(new DocLayerError(`Failed to edit slide text: ${stderr}`, 'PYTHON_ERROR'));
+        }
+      });
+    });
+  }
+
+  /**
+   * Render a slide to a JPEG image
+   */
+  async renderSlideToImage(filepath: string, slideNumber: number): Promise<string> {
+    const script = `
+import sys
+sys.path.insert(0, r"${this.pythonWrapperPath}")
+from doclayer_python import DocLayerClient
+
+try:
+    client = DocLayerClient()
+    image_path = client.render_slide_to_image(r"${filepath}", ${slideNumber})
+    print(image_path)
+except Exception as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    sys.exit(1)
+`;
+
+    return new Promise((resolve, reject) => {
+      const python = spawn(this.pythonPath, ['-c', script]);
+      let stdout = '';
+      let stderr = '';
+
+      python.stdout.on('data', (data) => stdout += data.toString());
+      python.stderr.on('data', (data) => stderr += data.toString());
+
+      python.on('close', (code) => {
+        if (code === 0) {
+          resolve(stdout.trim());
+        } else {
+          reject(new DocLayerError(`Failed to render slide: ${stderr}`, 'PYTHON_ERROR'));
+        }
+      });
+    });
+  }
+
+  /**
+   * Render all slides to JPEG images
+   */
+  async renderAllSlides(filepath: string): Promise<string[]> {
+    const script = `
+import sys
+import json
+sys.path.insert(0, r"${this.pythonWrapperPath}")
+from doclayer_python import DocLayerClient
+
+try:
+    client = DocLayerClient()
+    image_paths = client.render_all_slides(r"${filepath}")
+    print(json.dumps(image_paths))
+except Exception as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    sys.exit(1)
+`;
+
+    return new Promise((resolve, reject) => {
+      const python = spawn(this.pythonPath, ['-c', script]);
+      let stdout = '';
+      let stderr = '';
+
+      python.stdout.on('data', (data) => stdout += data.toString());
+      python.stderr.on('data', (data) => stderr += data.toString());
+
+      python.on('close', (code) => {
+        if (code === 0) {
+          try {
+            resolve(JSON.parse(stdout.trim()));
+          } catch (e) {
+            reject(new DocLayerError('Failed to parse image paths', 'PARSE_ERROR'));
+          }
+        } else {
+          reject(new DocLayerError(`Failed to render slides: ${stderr}`, 'PYTHON_ERROR'));
+        }
+      });
+    });
   }
 
   /**

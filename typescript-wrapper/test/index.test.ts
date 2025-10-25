@@ -18,7 +18,11 @@ describe('DocLayer TypeScript Wrapper', () => {
   let envCheck: any;
 
   beforeAll(async () => {
-    client = new DocLayerClient();
+    // Use venv Python for testing
+    const venvPython = path.join(__dirname, '..', '..', 'python-wrapper', 'venv', 'Scripts', 'python.exe');
+    client = new DocLayerClient({
+      pythonPath: venvPython
+    });
     envCheck = await client.checkEnvironment();
   });
 
