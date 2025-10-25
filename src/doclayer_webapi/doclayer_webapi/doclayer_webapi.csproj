@@ -17,4 +17,8 @@
     <PackageReference Include="Syncfusion.PresentationRenderer.Net.Core" Version="31.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\DocLayer.Core\DocLayer.Core\DocLayer.Core.csproj" />
+  </ItemGroup>
+
 </Project>
