@@ -15,6 +15,7 @@ DocLayer Core is built on .NET 8.0 and leverages DocumentFormat.OpenXml to creat
 - **Custom Themes**: Set presentation themes with custom fonts and accent colors
 - **Cross-platform**: Windows, macOS, Linux support via .NET 8.0
 - **Multiple Language Bindings**: Python and TypeScript/Node.js wrappers
+- **MCP Server**: Model Context Protocol server for AI agents (Claude, etc.)
 - **AI Agent Ready**: Perfect for LangChain, CrewAI, AutoGPT integrations
 - **Industry Standard**: Built on OpenXML format
 
@@ -76,6 +77,32 @@ Requirements:
 - Node.js 16.0 or higher
 - Python 3.8+ with `doclayer-py` package installed
 - .NET 8.0 Runtime
+
+### MCP Server (for AI Agents)
+
+Install the MCP server to enable AI agents like Claude to use DocLayer:
+
+```bash
+cd mcp-server
+pip install -e .
+```
+
+Configure your AI agent with:
+
+```json
+{
+  "mcpServers": {
+    "doclayer": {
+      "command": "python",
+      "args": ["-m", "doclayer_mcp.server"],
+      "env": {},
+      "working_directory": null
+    }
+  }
+}
+```
+
+See [mcp-server/README.md](mcp-server/README.md) for full configuration details.
 
 ## Usage
 

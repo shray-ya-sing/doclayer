@@ -10,6 +10,7 @@ DocLayer enables you to create PowerPoint files without requiring Microsoft Offi
 - **Python Package** - pip-installable Python library
 - **TypeScript Package** - npm-installable Node.js library
 - **REST API** - HTTP endpoints for any language
+- **MCP Server** - Model Context Protocol server for AI agents
 
 ## Key Features
 
@@ -41,9 +42,11 @@ Choose your preferred language:
 - **Python** - Native Python API via pythonnet
 - **TypeScript/Node.js** - npm package
 - **REST API** - HTTP endpoints for any language
+- **MCP Server** - For AI agents (Claude, etc.)
 
 ### AI Agent Ready
 Perfect for AI agent frameworks:
+- **MCP Server** - Native integration with Claude Desktop, Claude Code, and other MCP-compatible agents
 - LangChain document generation
 - CrewAI presentation tasks
 - AutoGPT integrations
@@ -68,6 +71,20 @@ client.create_presentation_with_theme(
 ### AI Agent Integration
 Use with AI frameworks to generate documents on demand.
 
+**MCP Server (Recommended)**:
+```json
+// Configure Claude Desktop or Claude Code
+{
+  "mcpServers": {
+    "doclayer": {
+      "command": "python",
+      "args": ["-m", "doclayer_mcp.server"]
+    }
+  }
+}
+```
+
+**LangChain Integration**:
 ```python
 from langchain.tools import Tool
 

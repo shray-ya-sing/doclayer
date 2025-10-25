@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "doclayer": {
+      "command": "python",
+      "args": ["-m", "doclayer_mcp.server"]
+    }
+  }
+}
