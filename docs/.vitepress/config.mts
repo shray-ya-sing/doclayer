@@ -6,8 +6,6 @@ export default defineConfig({
   base: '/',
   
   themeConfig: {
-    logo: '/logo.svg',
-    
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/getting-started' },
@@ -33,23 +31,6 @@ export default defineConfig({
           { text: 'Web API', link: '/api/webapi' }
         ]
       },
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Create Presentations', link: '/examples/create' },
-          { text: 'Extract Content', link: '/examples/extract' },
-          { text: 'Edit Slides', link: '/examples/edit' },
-          { text: 'Render Images', link: '/examples/render' }
-        ]
-      },
-      {
-        text: 'Deployment',
-        items: [
-          { text: 'Docker', link: '/deployment/docker' },
-          { text: 'Azure', link: '/deployment/azure' },
-          { text: 'AWS', link: '/deployment/aws' }
-        ]
-      }
     ],
 
     socialLinks: [

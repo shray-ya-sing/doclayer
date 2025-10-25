@@ -13,36 +13,36 @@ DocLayer Core is built on .NET 8.0 and leverages DocumentFormat.OpenXml to creat
 
 ## Key Features
 
-### 🎨 **Create & Edit**
+### Create & Edit
 Generate title slides with custom text and formatting. Modify text content in existing presentations with the edit API.
 
-### 📊 **Extract Content**
+### Extract Content
 Extract text, shapes, pictures, and metadata from existing presentations for analysis, processing, or migration.
 
-### 🖼️ **Render to Images**
+### Render to Images
 Convert slides to JPEG images for:
 - Thumbnail generation
 - Preview images
 - Web display
 - Batch processing
 
-### 🎭 **Custom Themes**
+### Custom Themes
 Set presentation themes with:
 - Custom fonts (any TrueType font)
 - Accent colors (4 customizable colors)
 - Consistent branding across presentations
 
-### 🌐 **Cross-Platform**
+### Cross-Platform
 Works on Windows, macOS, and Linux via .NET 8.0 runtime with native performance.
 
-### 🔌 **Multiple Language Bindings**
+### Multiple Language Bindings
 Choose your preferred language:
 - **C# / .NET** - Direct library access
 - **Python** - Native Python API via pythonnet
 - **TypeScript/Node.js** - npm package
 - **REST API** - HTTP endpoints for any language
 
-### 🤖 **AI Agent Ready**
+### AI Agent Ready
 Perfect for AI agent frameworks:
 - LangChain document generation
 - CrewAI presentation tasks

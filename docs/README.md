@@ -78,8 +78,6 @@ docs/
 │   ├── python.md
 │   ├── typescript.md
 │   └── webapi.md
-├── examples/             # Example pages (to be created)
-├── deployment/           # Deployment guides (to be created)
 ├── index.md             # Homepage
 ├── package.json
 ├── vercel.json
@@ -126,14 +124,14 @@ sidebar: [
 
 ## Features
 
-- ✅ Fast build times (<2 minutes)
-- ✅ Auto-deployment on git push
-- ✅ Local search included
-- ✅ Mobile responsive
-- ✅ Dark mode support
-- ✅ Syntax highlighting
-- ✅ Code group tabs
-- ✅ GitHub integration
+- Fast build times (<2 minutes)
+- Auto-deployment on git push
+- Local search included
+- Mobile responsive
+- Dark mode support
+- Syntax highlighting
+- Code group tabs
+- GitHub integration
 
 ## Support
 

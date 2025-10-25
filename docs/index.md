@@ -14,36 +14,28 @@ hero:
       link: https://github.com/shray-ya-sing/doclayer
 
 features:
-  - icon: 🎨
-    title: Create & Edit
+  - title: Create & Edit
     details: Generate title slides with custom text and formatting. Modify existing presentations with ease.
   
-  - icon: 📊
-    title: Extract Content
+  - title: Extract Content
     details: Extract text, shapes, and metadata from existing presentations for analysis and processing.
   
-  - icon: 🖼️
-    title: Render to Images
+  - title: Render to Images
     details: Convert slides to JPEG images for thumbnails, previews, and web display.
   
-  - icon: 🎭
-    title: Custom Themes
+  - title: Custom Themes
     details: Set presentation themes with custom fonts and accent colors to match your brand.
   
-  - icon: 🌐
-    title: Cross-Platform
+  - title: Cross-Platform
     details: Works on Windows, macOS, and Linux via .NET 8.0 with native performance.
   
-  - icon: 🔌
-    title: Multiple Bindings
+  - title: Multiple Bindings
     details: Available for C#, Python, TypeScript/Node.js, and REST API. Choose your favorite language.
   
-  - icon: 🤖
-    title: AI Agent Ready
+  - title: AI Agent Ready
     details: Perfect for LangChain, CrewAI, AutoGPT integrations with simple, intuitive APIs.
   
-  - icon: ⚡
-    title: Industry Standard
+  - title: Industry Standard
     details: Built on OpenXML format with DocumentFormat.OpenXml and Syncfusion rendering.
 ---
 
@@ -147,18 +139,18 @@ dotnet add reference path/to/DocLayer.Core.csproj
 
 ## Use Cases
 
-- 📈 **Automated Report Generation** - Generate presentations from data
-- 🤖 **AI Agent Integration** - Use with LangChain, CrewAI, AutoGPT
-- 📊 **Data Visualization** - Create charts and dashboards programmatically
-- 🔄 **Batch Processing** - Process hundreds of presentations at scale
-- 🖼️ **Thumbnail Generation** - Create preview images for presentations
-- 📝 **Content Extraction** - Extract text and data for analysis
+- **Automated Report Generation** - Generate presentations from data
+- **AI Agent Integration** - Use with LangChain, CrewAI, AutoGPT
+- **Data Visualization** - Create charts and dashboards programmatically
+- **Batch Processing** - Process hundreds of presentations at scale
+- **Thumbnail Generation** - Create preview images for presentations
+- **Content Extraction** - Extract text and data for analysis
 
 ## Why DocLayer?
 
-✅ **No Microsoft Office Required** - Pure OpenXML implementation  
-✅ **Cross-Platform** - Works everywhere .NET runs  
-✅ **Multi-Language** - C#, Python, TypeScript, REST API  
-✅ **Production Ready** - Battle-tested with comprehensive tests  
-✅ **Open Source** - MIT License, free for commercial use  
-✅ **Well Documented** - Examples, API docs, and guides
+- **No Microsoft Office Required** - Pure OpenXML implementation  
+- **Cross-Platform** - Works everywhere .NET runs  
+- **Multi-Language** - C#, Python, TypeScript, REST API  
+- **Production Ready** - Battle-tested with comprehensive tests  
+- **Open Source** - MIT License, free for commercial use  
+- **Well Documented** - Examples, API docs, and guides
