@@ -1,15 +1,15 @@
 # Introduction
 
-DocLayer is a cross-platform library for generating PowerPoint presentations programmatically using OpenXML. It provides C#, Python, and TypeScript/Node.js APIs for creating PPTX files with support for themes, slides, shapes, and text formatting.
+DocLayer is a cross-platform library for generating PowerPoint presentations programmatically. It provides C#, Python, and TypeScript/Node.js APIs for creating, editing, and analyzing PPTX files.
 
 ## What is DocLayer?
 
-DocLayer Core is built on .NET 8.0 and leverages DocumentFormat.OpenXml to create PowerPoint files without requiring Microsoft Office. The library includes:
+DocLayer enables you to create PowerPoint files without requiring Microsoft Office. The library includes:
 
-- **C# Core Library** - Native .NET implementation
-- **Python Wrapper** - via pythonnet for easy Python integration
-- **TypeScript Wrapper** - Node.js bindings via Python bridge
-- **REST API** - ASP.NET Core Web API for HTTP access
+- **C# Library** - Native .NET API
+- **Python Package** - pip-installable Python library
+- **TypeScript Package** - npm-installable Node.js library
+- **REST API** - HTTP endpoints for any language
 
 ## Key Features
 
@@ -33,7 +33,7 @@ Set presentation themes with:
 - Consistent branding across presentations
 
 ### Cross-Platform
-Works on Windows, macOS, and Linux via .NET 8.0 runtime with native performance.
+Works on Windows, macOS, and Linux with native performance.
 
 ### Multiple Language Bindings
 Choose your preferred language:
@@ -49,38 +49,6 @@ Perfect for AI agent frameworks:
 - AutoGPT integrations
 - Custom agent workflows
 
-## Architecture
-
-```
-┌─────────────────────────┐
-│   Your Application      │
-│  (C#/Python/TS/HTTP)    │
-└───────────┬─────────────┘
-            │
-            v
-┌─────────────────────────┐
-│   DocLayer Wrapper      │
-│  (Language-specific)    │
-└───────────┬─────────────┘
-            │
-            v
-┌─────────────────────────┐
-│   DocLayer.Core (C#)    │
-│  PresentationBuilder    │
-└───────────┬─────────────┘
-            │
-            v
-┌─────────────────────────┐
-│   OpenXML SDK           │
-│  DocumentFormat.OpenXml │
-└───────────┬─────────────┘
-            │
-            v
-┌─────────────────────────┐
-│   PowerPoint Files      │
-│   (.pptx format)        │
-└─────────────────────────┘
-```
 
 ## Use Cases
 
@@ -135,35 +103,17 @@ for i, img_path in enumerate(images, 1):
     upload_thumbnail(f"slide_{i}.jpg", img_path)
 ```
 
-## Technology Stack
-
-- **.NET 8.0** - Core runtime
-- **DocumentFormat.OpenXml 3.3.0** - PowerPoint file generation
-- **Syncfusion.Presentation** - Slide rendering to images
-- **pythonnet 3.0.0+** - Python interop
-- **Node.js 16.0+** - TypeScript wrapper runtime
-- **ASP.NET Core 8.0** - REST API
 
 ## Requirements
 
-### For C# Development
-- .NET 8.0 SDK
-- DocumentFormat.OpenXml 3.3.0
-- Syncfusion.Presentation.Net.Core 31.2.3 (for rendering)
-
 ### For Python
 - Python 3.8 or higher
-- pythonnet 3.0.0 or higher
-- .NET 8.0 Runtime
 
 ### For TypeScript/Node.js
 - Node.js 16.0 or higher
-- Python 3.8+ with doclayer-py installed
-- .NET 8.0 Runtime
 
-### For REST API
+### For C# Development
 - .NET 8.0 SDK
-- ASP.NET Core Runtime
 
 ## Next Steps
 
