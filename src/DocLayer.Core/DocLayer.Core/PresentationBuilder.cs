@@ -14,18 +14,52 @@ namespace DocLayer.Core
     /// <summary>
     /// Provides high-level methods for creating PowerPoint slides with pre-defined templates
     /// </summary>
-    public class PresentationBuilder
+    public class PresentationBuilder : IDisposable
     {
         private readonly PresentationDocument _presentationDoc;
         private PresentationPart _presentationPart;
         private uint _slideIdCounter = 256;
         private readonly string? _filePath;
+        private readonly bool _ownsDocument;
 
         public PresentationBuilder(PresentationDocument presentationDoc, string? filePath = null)
         {
             _presentationDoc = presentationDoc ?? throw new ArgumentNullException(nameof(presentationDoc));
             _presentationPart = _presentationDoc.PresentationPart ?? throw new InvalidOperationException("PresentationPart not found");
             _filePath = filePath;
+            _ownsDocument = false;
+        }
+
+        private PresentationBuilder(PresentationDocument presentationDoc, string filePath, bool ownsDocument)
+        {
+            _presentationDoc = presentationDoc ?? throw new ArgumentNullException(nameof(presentationDoc));
+            _presentationPart = _presentationDoc.PresentationPart ?? throw new InvalidOperationException("PresentationPart not found");
+            _filePath = filePath;
+            _ownsDocument = ownsDocument;
+        }
+
+        /// <summary>
+        /// Creates a PresentationBuilder from a file path
+        /// </summary>
+        /// <param name="filePath">Path to the PowerPoint file</param>
+        /// <param name="isEditable">Whether to open the file for editing (default: true)</param>
+        /// <returns>A new PresentationBuilder instance</returns>
+        public static PresentationBuilder FromFile(string filePath, bool isEditable = true)
+        {
+            var doc = PresentationDocument.Open(filePath, isEditable);
+            return new PresentationBuilder(doc, filePath, ownsDocument: true);
+        }
+
+        /// <summary>
+        /// Creates a PresentationBuilder from a stream
+        /// </summary>
+        /// <param name="stream">Stream containing the PowerPoint file</param>
+        /// <param name="isEditable">Whether to open the file for editing (default: true)</param>
+        /// <returns>A new PresentationBuilder instance</returns>
+        public static PresentationBuilder FromStream(Stream stream, bool isEditable = true)
+        {
+            var doc = PresentationDocument.Open(stream, isEditable);
+            return new PresentationBuilder(doc, filePath: null, ownsDocument: true);
         }
 
         /// <summary>
@@ -234,6 +268,78 @@ namespace DocLayer.Core
 
             // Use the existing Syncfusion helper method to export the slide
             return SyncfusionHelperMethods.ExportSlideToImage(_filePath, slideNumber);
+        }
+
+        /// <summary>
+        /// Gets the total number of slides in the presentation
+        /// </summary>
+        /// <returns>Number of slides</returns>
+        public int GetSlideCount()
+        {
+            return _presentationDoc.GetSlideCount();
+        }
+
+        /// <summary>
+        /// Extracts content from all slides in the presentation
+        /// </summary>
+        /// <returns>Dictionary mapping slide number (1-based) to slide content</returns>
+        public Dictionary<int, SlideContentInfo> ExtractAllSlides()
+        {
+            var allSlides = new Dictionary<int, SlideContentInfo>();
+            int slideCount = GetSlideCount();
+            
+            for (int i = 1; i <= slideCount; i++)
+            {
+                allSlides[i] = ExtractSlideContent(i);
+            }
+            
+            return allSlides;
+        }
+
+        /// <summary>
+        /// Renders all slides to image files (JPEG format)
+        /// </summary>
+        /// <returns>Dictionary mapping slide number (1-based) to image file path</returns>
+        /// <exception cref="InvalidOperationException">Thrown when file path was not provided to constructor</exception>
+        public Dictionary<int, string> RenderAllSlidesToImages()
+        {
+            if (string.IsNullOrEmpty(_filePath))
+            {
+                throw new InvalidOperationException(
+                    "Cannot render slides to images: file path was not provided to PresentationBuilder constructor.");
+            }
+
+            // Save any pending changes first
+            _presentationDoc.Save();
+
+            var images = new Dictionary<int, string>();
+            int slideCount = GetSlideCount();
+            
+            for (int i = 1; i <= slideCount; i++)
+            {
+                images[i] = SyncfusionHelperMethods.ExportSlideToImage(_filePath, i);
+            }
+            
+            return images;
+        }
+
+        /// <summary>
+        /// Saves any pending changes to the presentation
+        /// </summary>
+        public void Save()
+        {
+            _presentationDoc.Save();
+        }
+
+        /// <summary>
+        /// Disposes the PresentationBuilder and closes the underlying document if owned
+        /// </summary>
+        public void Dispose()
+        {
+            if (_ownsDocument)
+            {
+                _presentationDoc?.Dispose();
+            }
         }
 
         #region Helper Methods

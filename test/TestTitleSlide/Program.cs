@@ -1,14 +1,14 @@
 using DocLayer.Core.Examples;
 
-Console.WriteLine("Testing Slide Editing Features");
+Console.WriteLine("Testing Convenience Methods for Agent Integration");
 Console.WriteLine("=========================================\n");
 
 try
 {
-    TestSlideEditing.Run();
+    TestConvenienceMethods.Run();
     
     Console.WriteLine("\n" + "=".PadRight(50, '='));
-    Console.WriteLine("✓ Tests completed successfully!");
+    Console.WriteLine("✓ All tests completed successfully!");
 }
 catch (Exception ex)
 {
