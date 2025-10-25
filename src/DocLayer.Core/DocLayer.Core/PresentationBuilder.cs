@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using OpenXMLExtensions;
+using DocLayer.Core.Models;
 using D = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
@@ -97,6 +98,117 @@ namespace DocLayer.Core
 
             // Save changes
             theme.Save();
+        }
+
+        /// <summary>
+        /// Extracts structured content information from a slide
+        /// </summary>
+        /// <param name="slideNumber">The slide number (1-based index)</param>
+        /// <returns>SlideContentInfo containing shapes and pictures with their properties</returns>
+        public SlideContentInfo ExtractSlideContent(int slideNumber)
+        {
+            var slide = _presentationDoc.GetSlide(slideNumber);
+            var contentInfo = new SlideContentInfo();
+
+            // Extract all shapes
+            foreach (var shape in slide.CommonSlideData.ShapeTree.Elements<P.Shape>())
+            {
+                var shapeInfo = new ShapeInfo
+                {
+                    Name = shape.GetName() ?? "(unnamed)",
+                    Text = shape.GetText() ?? ""
+                };
+
+                // Get position if available (only if ShapeProperties exists)
+                if (shape.ShapeProperties != null)
+                {
+                    try
+                    {
+                        var hPos = shape.GetHorizontalPosition();
+                        var vPos = shape.GetVerticalPosition();
+                        shapeInfo.Position = new Models.Position(hPos, vPos);
+                    }
+                    catch
+                    {
+                        // Position not available for this shape
+                    }
+
+                    try
+                    {
+                        var width = shape.GetWidth();
+                        var height = shape.GetHeight();
+                        shapeInfo.Size = new Models.Size(width, height);
+                    }
+                    catch
+                    {
+                        // Size not available for this shape
+                    }
+                }
+
+                contentInfo.Shapes.Add(shapeInfo);
+            }
+
+            // Extract all pictures
+            foreach (var picture in slide.CommonSlideData.ShapeTree.Elements<P.Picture>())
+            {
+                var picInfo = new PictureInfo();
+                
+                var nvPicProps = picture.GetFirstChild<P.NonVisualPictureProperties>();
+                if (nvPicProps != null)
+                {
+                    var nvDrawingProps = nvPicProps.GetFirstChild<P.NonVisualDrawingProperties>();
+                    if (nvDrawingProps?.Name != null)
+                    {
+                        picInfo.Name = nvDrawingProps.Name;
+                    }
+                }
+
+                // Get position and size from picture's ShapeProperties
+                var picShapeProps = picture.GetFirstChild<P.ShapeProperties>();
+                if (picShapeProps != null)
+                {
+                    var hPos = picShapeProps.GetHorizontalPosition();
+                    var vPos = picShapeProps.GetVerticalPosition();
+                    if (hPos.HasValue && vPos.HasValue)
+                    {
+                        picInfo.Position = new Models.Position(hPos.Value, vPos.Value);
+                    }
+
+                    var width = picShapeProps.GetWidth();
+                    var height = picShapeProps.GetHeight();
+                    if (width.HasValue && height.HasValue)
+                    {
+                        picInfo.Size = new Models.Size(width.Value, height.Value);
+                    }
+                }
+
+                contentInfo.Pictures.Add(picInfo);
+            }
+
+            return contentInfo;
+        }
+
+        /// <summary>
+        /// Edits the text content of a shape on a slide by its name
+        /// </summary>
+        /// <param name="slideNumber">The slide number (1-based index)</param>
+        /// <param name="elementName">The name of the shape to edit</param>
+        /// <param name="newText">The new text content</param>
+        public void EditSlideText(int slideNumber, string elementName, string newText)
+        {
+            var slide = _presentationDoc.GetSlide(slideNumber);
+            
+            try
+            {
+                // Try to get the shape by name and set its text
+                var shape = slide.GetShape(elementName);
+                shape.SetText(newText);
+                _presentationDoc.Save();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Could not find or edit shape '{elementName}' on slide {slideNumber}", ex);
+            }
         }
 
         #region Helper Methods
