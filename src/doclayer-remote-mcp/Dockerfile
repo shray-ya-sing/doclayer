@@ -1,8 +1,8 @@
 FROM python:3.11-slim
 
-# Install .NET 8.0 runtime
+# Install .NET 8.0 runtime and dependencies
 RUN apt-get update && \
-    apt-get install -y wget && \
+    apt-get install -y wget libicu-dev && \
     wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
     chmod +x dotnet-install.sh && \
     ./dotnet-install.sh --channel 8.0 --runtime dotnet --install-dir /usr/share/dotnet && \
