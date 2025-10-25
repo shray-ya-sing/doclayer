@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using OpenXMLExtensions;
 using DocLayer.Core.Models;
+using InternalUtilities.Syncfusion;
 using D = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
@@ -18,11 +19,13 @@ namespace DocLayer.Core
         private readonly PresentationDocument _presentationDoc;
         private PresentationPart _presentationPart;
         private uint _slideIdCounter = 256;
+        private readonly string? _filePath;
 
-        public PresentationBuilder(PresentationDocument presentationDoc)
+        public PresentationBuilder(PresentationDocument presentationDoc, string? filePath = null)
         {
             _presentationDoc = presentationDoc ?? throw new ArgumentNullException(nameof(presentationDoc));
             _presentationPart = _presentationDoc.PresentationPart ?? throw new InvalidOperationException("PresentationPart not found");
+            _filePath = filePath;
         }
 
         /// <summary>
@@ -209,6 +212,28 @@ namespace DocLayer.Core
             {
                 throw new InvalidOperationException($"Could not find or edit shape '{elementName}' on slide {slideNumber}", ex);
             }
+        }
+
+        /// <summary>
+        /// Renders a slide to an image file (JPEG format)
+        /// </summary>
+        /// <param name="slideNumber">The slide number (1-based index)</param>
+        /// <returns>File path to the generated image</returns>
+        /// <exception cref="InvalidOperationException">Thrown when file path was not provided to constructor</exception>
+        public string RenderSlideToImage(int slideNumber)
+        {
+            if (string.IsNullOrEmpty(_filePath))
+            {
+                throw new InvalidOperationException(
+                    "Cannot render slide to image: file path was not provided to PresentationBuilder constructor. " +
+                    "Please instantiate PresentationBuilder with the file path parameter, or use SyncfusionHelperMethods.ExportSlideToImage directly.");
+            }
+
+            // Save any pending changes first
+            _presentationDoc.Save();
+
+            // Use the existing Syncfusion helper method to export the slide
+            return SyncfusionHelperMethods.ExportSlideToImage(_filePath, slideNumber);
         }
 
         #region Helper Methods

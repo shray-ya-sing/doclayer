@@ -21,7 +21,7 @@ namespace DocLayer.Core.Examples
             // Open the copy for editing
             using (PresentationDocument presentationDocument = PresentationDocument.Open(outputPath, true))
             {
-                var builder = new PresentationBuilder(presentationDocument);
+                var builder = new PresentationBuilder(presentationDocument, outputPath);
 
                 // Test 1: Extract content from slide 1
                 Console.WriteLine("=== TEST 1: Extract Slide Content ===");
@@ -45,6 +45,11 @@ namespace DocLayer.Core.Examples
 
                 Console.WriteLine($"✓ All tests completed. Output saved to: {outputPath}");
             }
+
+            // Test 5: Render slide to image (must be done after closing the document)
+            Console.WriteLine();
+            Console.WriteLine("=== TEST 5: Render Slide to Image ===");
+            TestRenderSlideToImageStandalone(outputPath, 3);
         }
 
         private static void TestExtractSlideContent(PresentationBuilder builder, int slideNumber)
@@ -170,6 +175,33 @@ namespace DocLayer.Core.Examples
             {
                 Console.WriteLine($"✗ Slide 3 refresh test failed: {ex.Message}");
                 Console.WriteLine($"   Stack trace: {ex.StackTrace}");
+            }
+        }
+
+        private static void TestRenderSlideToImageStandalone(string pptxPath, int slideNumber)
+        {
+            try
+            {
+                Console.WriteLine($"Rendering slide {slideNumber} to image...");
+                
+                // Use Syncfusion helper directly since document needs to be closed
+                string imagePath = InternalUtilities.Syncfusion.SyncfusionHelperMethods.ExportSlideToImage(pptxPath, slideNumber);
+                
+                if (File.Exists(imagePath))
+                {
+                    var fileInfo = new FileInfo(imagePath);
+                    Console.WriteLine($"✓ Render test passed");
+                    Console.WriteLine($"  Image saved to: {imagePath}");
+                    Console.WriteLine($"  File size: {fileInfo.Length / 1024} KB");
+                }
+                else
+                {
+                    Console.WriteLine("✗ Render test failed: Image file was not created");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"✗ Render test failed: {ex.Message}");
             }
         }
     }
