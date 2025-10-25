@@ -14,13 +14,14 @@ RUN apt-get update && \
 # Set working directory
 WORKDIR /app
 
-# Install dependencies
+# Copy and install DocLayer Python wrapper locally
+COPY doclayer_python_local /app/doclayer_python_local
+RUN pip install --no-cache-dir pythonnet>=3.0.0 && \
+    pip install -e /app/doclayer_python_local
+
+# Install MCP server dependencies
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Clone and install DocLayer Python wrapper from GitHub
-RUN pip install --no-cache-dir pythonnet>=3.0.0 && \
-    pip install git+https://github.com/shray-ya-sing/doclayer.git#subdirectory=python-wrapper
 
 # Copy remote MCP server code
 COPY server.py /app/

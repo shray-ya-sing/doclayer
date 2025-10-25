@@ -65,13 +65,19 @@ Server runs on `http://localhost:8000/sse`
 
 ### Option 2: Using Docker
 
+**Important**: Prepare the build context first:
+
 ```bash
 cd src/doclayer-remote-mcp
+# Copy python wrapper for Docker build
+bash prepare-build.sh
+
+# Build and run
 docker build -t doclayer-mcp .
 docker run -p 8000:8000 doclayer-mcp
 ```
 
-Deploy the Docker image to Render, Railway, or Fly.io.
+**For Render**: Run `bash prepare-build.sh` locally, commit the `doclayer_python_local` folder, then deploy.
 
 ## Deploy to Railway
 
