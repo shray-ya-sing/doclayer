@@ -8,13 +8,15 @@ DocLayer Core is built on .NET 8.0 and leverages DocumentFormat.OpenXml to creat
 
 ## Features
 
-- Create title slides with custom text and formatting
-- Set presentation themes with custom fonts and accent colors
-- Cross-platform support (Windows, macOS, Linux via .NET)
-- Python wrapper for easy integration with AI agents and data science workflows
-- TypeScript/Node.js wrapper for JavaScript/TypeScript applications
-- Support for footnotes and slide elements
-- Built on industry-standard OpenXML format
+- **Create & Edit**: Generate title slides with custom text and formatting
+- **Extract Content**: Extract text, shapes, and metadata from existing presentations
+- **Edit Slides**: Modify text content in existing presentations
+- **Render to Images**: Convert slides to JPEG images for thumbnails and previews
+- **Custom Themes**: Set presentation themes with custom fonts and accent colors
+- **Cross-platform**: Windows, macOS, Linux support via .NET 8.0
+- **Multiple Language Bindings**: Python and TypeScript/Node.js wrappers
+- **AI Agent Ready**: Perfect for LangChain, CrewAI, AutoGPT integrations
+- **Industry Standard**: Built on OpenXML format
 
 ## Installation
 
@@ -125,58 +127,85 @@ pptx_bytes = client.create_title_slide(
 print(f"Created presentation: {len(pptx_bytes)} bytes")
 ```
 
-### Advanced Python Usage
+### Advanced Python Usage - Extract & Edit
 
 ```python
 from doclayer_python import DocLayerClient
 
 client = DocLayerClient()
 
-with client.create_presentation("advanced.pptx") as pres:
-    # Set widescreen format
-    pres.set_widescreen()
-    
-    # Add title slide
-    slide1 = pres.add_slide()
-    slide1.add_title("Quarterly Report")
-    slide1.add_textbox("Q4 2024 Analysis")
-    slide1.add_footnote("Generated automatically")
-    
-    # Add content slide with shapes
-    slide2 = pres.add_slide()
-    slide2.add_title("Key Metrics")
-    
-    shapes = slide2.get_shape_tree()
-    shapes.add_rectangle(1, 2, 2, 3)
-    shapes.add_textbox("Revenue: $2.5M", 1, 1)
+# Get slide count
+count = client.get_slide_count("presentation.pptx")
+print(f"Slides: {count}")
+
+# Extract content from a specific slide
+content = client.extract_slide_content("presentation.pptx", slide_number=1)
+for shape in content['shapes']:
+    print(f"Shape: {shape['name']} - Text: {shape['text']}")
+
+# Extract all slides
+all_content = client.extract_all_slides("presentation.pptx")
+for slide_num, slide_content in all_content.items():
+    print(f"Slide {slide_num}: {len(slide_content['shapes'])} shapes")
+
+# Edit text on a slide
+client.edit_slide_text(
+    "presentation.pptx",
+    slide_number=1,
+    element_name="Title 1",
+    new_text="Updated Title"
+)
+
+# Render slide to image
+image_path = client.render_slide_to_image("presentation.pptx", slide_number=1)
+print(f"Rendered to: {image_path}")
+
+# Render all slides to images
+image_paths = client.render_all_slides("presentation.pptx")
+print(f"Rendered {len(image_paths)} slides")
 ```
 
 ### TypeScript / Node.js Example
 
 ```typescript
-import { createTitleSlide, createPresentationWithTheme } from '@doclayer/ts';
+import { DocLayerClient } from '@doclayer/ts';
+
+const client = new DocLayerClient();
 
 // Create a simple title slide
-const buffer = await createTitleSlide(
-  'presentation.pptx',
-  'Welcome to DocLayer',
-  'PowerPoint Generation from Node.js',
-  'Source: DocLayer TypeScript Wrapper'
-);
+const buffer = await client.createTitleSlide('presentation.pptx', {
+  title: 'Welcome to DocLayer',
+  subtitle: 'PowerPoint Generation from Node.js',
+  footnote: 'Source: DocLayer TypeScript Wrapper'
+});
 
 console.log(`Created presentation: ${buffer.length} bytes`);
 
-// Create presentation with custom theme
-const themedBuffer = await createPresentationWithTheme(
-  'custom_theme.pptx',
-  'Custom Theme Demo',
-  {
-    subtitle: 'Arial font with brand colors',
-    footnote: 'Source: My Company',
-    fontName: 'Arial',
-    accentColors: ['FF5733', '33FF57', '3357FF', 'F3FF33']
-  }
+// Get slide count
+const count = await client.getSlideCount('presentation.pptx');
+console.log(`Slides: ${count}`);
+
+// Extract content from a slide
+const content = await client.extractSlideContent('presentation.pptx', 1);
+content.shapes.forEach(shape => {
+  console.log(`Shape: ${shape.name} - Text: ${shape.text}`);
+});
+
+// Edit text on a slide
+await client.editSlideText(
+  'presentation.pptx',
+  1,
+  'Title 1',
+  'Updated Title'
 );
+
+// Render slide to image
+const imagePath = await client.renderSlideToImage('presentation.pptx', 1);
+console.log(`Rendered to: ${imagePath}`);
+
+// Render all slides
+const imagePaths = await client.renderAllSlides('presentation.pptx');
+console.log(`Rendered ${imagePaths.length} slides`);
 ```
 
 ## API Reference
@@ -189,8 +218,14 @@ Main class for building PowerPoint presentations.
 
 **Methods:**
 
-- `CreateTitleSlide(string title, string? subtitle = null, string? footnote = "Source:")` - Creates a title slide with optional subtitle and footnote
-- `SetPresentationTheme(string? fontName = null, List<string>? accentColors = null)` - Sets custom theme with font and colors (requires exactly 4 accent colors if provided)
+- `CreateTitleSlide(string title, string? subtitle = null, string? footnote = "Source:")` - Creates a title slide
+- `SetPresentationTheme(string? fontName = null, List<string>? accentColors = null)` - Sets custom theme
+- `GetSlideCount()` - Returns the number of slides in the presentation
+- `ExtractSlideContent(int slideNumber)` - Extracts shapes, text, and pictures from a slide
+- `ExtractAllSlides()` - Extracts content from all slides as a dictionary
+- `EditSlideText(int slideNumber, string elementName, string newText)` - Edits text of a shape
+- `RenderSlideToImage(int slideNumber)` - Renders a slide to JPEG image
+- `RenderAllSlidesToImages()` - Renders all slides to JPEG images
 
 ### Python API
 
@@ -200,18 +235,30 @@ Python client for interacting with DocLayer.Core.
 
 **Methods:**
 
-- `create_title_slide(filepath, title, subtitle=None, footnote="Source:")` - Creates a simple presentation with a title slide, returns bytes
-- `create_presentation(filepath)` - Returns a context manager for building complex presentations
+- `create_title_slide(filepath, title, subtitle=None, footnote="Source:")` - Creates a presentation with a title slide
+- `create_presentation_with_theme(filepath, title, subtitle=None, footnote="Source:", font_name=None, accent_colors=None)` - Creates presentation with custom theme
+- `get_slide_count(filepath)` - Returns the number of slides
+- `extract_slide_content(filepath, slide_number)` - Extracts content from a specific slide
+- `extract_all_slides(filepath)` - Extracts content from all slides
+- `edit_slide_text(filepath, slide_number, element_name, new_text)` - Edits text of a shape
+- `render_slide_to_image(filepath, slide_number)` - Renders a slide to JPEG, returns image path
+- `render_all_slides(filepath)` - Renders all slides to JPEG images, returns list of paths
 
 #### TypeScript API
 
 TypeScript/Node.js client that uses Python bridge to generate presentations.
 
-**Functions:**
+**DocLayerClient Methods:**
 
-- `createTitleSlide(filepath, title, subtitle?, footnote?)` - Creates a simple presentation with a title slide, returns Promise<Buffer>
-- `createPresentationWithTheme(filepath, title, options?)` - Creates presentation with custom theme (font and 4 accent colors), returns Promise<Buffer>
-- `DocLayerClient` - Main client class with environment checking and configuration options
+- `createTitleSlide(filepath, options)` - Creates a presentation with a title slide
+- `createPresentationWithTheme(filepath, options)` - Creates presentation with custom theme
+- `getSlideCount(filepath)` - Returns the number of slides
+- `extractSlideContent(filepath, slideNumber)` - Extracts content from a specific slide
+- `extractAllSlides(filepath)` - Extracts content from all slides
+- `editSlideText(filepath, slideNumber, elementName, newText)` - Edits text of a shape
+- `renderSlideToImage(filepath, slideNumber)` - Renders a slide to JPEG, returns image path
+- `renderAllSlides(filepath)` - Renders all slides to JPEG images, returns array of paths
+- `checkEnvironment()` - Checks if Python and DocLayer dependencies are available
 
 ## Project Structure
 

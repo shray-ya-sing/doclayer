@@ -1,6 +1,6 @@
 # DocLayer TypeScript/JavaScript Wrapper
 
-TypeScript/JavaScript bindings for the DocLayer PowerPoint generation library. This package uses the Python wrapper as a bridge to generate PowerPoint files from Node.js.
+TypeScript/JavaScript bindings for the DocLayer PowerPoint library. Generate, extract, edit, and render PowerPoint presentations from Node.js. This package uses the Python wrapper as a bridge to access the full DocLayer.Core functionality.
 
 ## Installation
 
@@ -84,6 +84,51 @@ const themedBuffer = await client.createPresentationWithTheme('themed.pptx', {
 });
 ```
 
+### Extract and Edit Presentations
+
+```typescript
+import { DocLayerClient } from '@doclayer/ts';
+
+const client = new DocLayerClient();
+
+// Get slide count
+const count = await client.getSlideCount('presentation.pptx');
+console.log(`Presentation has ${count} slides`);
+
+// Extract content from a specific slide
+const content = await client.extractSlideContent('presentation.pptx', 1);
+content.shapes.forEach(shape => {
+  console.log(`Shape: ${shape.name}`);
+  console.log(`Text: ${shape.text}`);
+  console.log(`Position:`, shape.position);
+  console.log(`Size:`, shape.size);
+});
+
+// Extract all slides
+const allContent = await client.extractAllSlides('presentation.pptx');
+for (const [slideNum, slideContent] of Object.entries(allContent)) {
+  console.log(`Slide ${slideNum}: ${slideContent.shapes.length} shapes, ${slideContent.pictures.length} pictures`);
+}
+
+// Edit text on a slide
+await client.editSlideText(
+  'presentation.pptx',
+  1,
+  'Title 1',
+  'Updated Title Text'
+);
+
+// Render slide to JPEG image
+const imagePath = await client.renderSlideToImage('presentation.pptx', 1);
+console.log(`Slide rendered to: ${imagePath}`);
+
+// Render all slides to images
+const imagePaths = await client.renderAllSlides('presentation.pptx');
+imagePaths.forEach((path, i) => {
+  console.log(`Slide ${i + 1} rendered to: ${path}`);
+});
+```
+
 ## Architecture
 
 The TypeScript wrapper uses a Python bridge architecture:
@@ -137,9 +182,57 @@ Main client class for DocLayer operations.
 - `tempDir` (string): Temporary directory for intermediate files
 
 **Methods:**
+
+*Creation:*
 - `createTitleSlide(filepath, options)` - Create title slide presentation
 - `createPresentationWithTheme(filepath, options)` - Create themed presentation
+
+*Query:*
+- `getSlideCount(filepath)` - Get number of slides in presentation
+- `extractSlideContent(filepath, slideNumber)` - Extract shapes and pictures from a slide
+- `extractAllSlides(filepath)` - Extract content from all slides
+
+*Edit:*
+- `editSlideText(filepath, slideNumber, elementName, newText)` - Modify text of a shape
+
+*Rendering:*
+- `renderSlideToImage(filepath, slideNumber)` - Render slide to JPEG, returns image path
+- `renderAllSlides(filepath)` - Render all slides to JPEG images, returns array of paths
+
+*Utility:*
 - `checkEnvironment()` - Check if Python and DocLayer are available
+
+## API Types
+
+```typescript
+interface Position {
+  x: number;
+  y: number;
+}
+
+interface Size {
+  width: number;
+  height: number;
+}
+
+interface ShapeInfo {
+  name: string;
+  text: string;
+  position?: Position;
+  size?: Size;
+}
+
+interface PictureInfo {
+  name: string;
+  position?: Position;
+  size?: Size;
+}
+
+interface SlideContent {
+  shapes: ShapeInfo[];
+  pictures: PictureInfo[];
+}
+```
 
 ## Testing
 
