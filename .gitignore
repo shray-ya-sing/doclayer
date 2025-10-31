@@ -76,3 +76,6 @@ env.bak/
 venv.bak/
 
 mcp-server/nul
+
+# Warp configuration
+WARP.md
