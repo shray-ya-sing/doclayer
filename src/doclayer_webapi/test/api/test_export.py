@@ -12,7 +12,8 @@ output_pptx = os.path.join(SCRIPT_DIR, "GeneratedPresentation.pptx")
 
 def test_pptx_export():
     # Configuration
-    url = "http://localhost:5245/api/Presentation/export" # Adjust if your Docker host varies
+    dev_url = "http://localhost:5245/api/Presentation/export" 
+    prod_url = "https://doclayer.onrender.com/api/Presentation/export"
 
     # 1. Load the slide data from your file
     if not os.path.exists(json_file_path):
@@ -29,12 +30,12 @@ def test_pptx_export():
         "SlideJsonArray": [slide_data] 
     }
 
-    print(f"Sending request to {url}...")
+    print(f"Sending request to {prod_url}...")
 
     try:
         # 3. POST the request
         response = requests.post(
-            url, 
+            prod_url, 
             json=payload,
             headers={"Content-Type": "application/json"}
         )
