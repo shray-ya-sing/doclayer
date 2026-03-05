@@ -1,3 +1,5 @@
+using DocLayer.Core;
+
 namespace doclayer_webapi.Models
 {
     /// <summary>
@@ -8,6 +10,16 @@ namespace doclayer_webapi.Models
         public required string Title { get; set; }
         public string? Subtitle { get; set; }
         public string? Footnote { get; set; }
+    }
+
+    /// <summary>
+    /// Request model for exporting an array of JSON to Pptx file
+    /// </summary>
+    public class ExportRequest
+    {
+        public required List<SlideSchema> SlideJsonArray { get; set; }
+
+        public required string PresentationName { get; set; }
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿using D = DocumentFormat.OpenXml.Drawing;
+using D = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
 using P = DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml;
@@ -8,6 +8,7 @@ using Microsoft.SemanticKernel;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Drawing;
+using DocLayer.Core.Models;
 
 
 namespace OpenXMLExtensions
@@ -693,6 +694,82 @@ namespace OpenXMLExtensions
                 D.Blip blip = blipFill.GetFirstChild<D.Blip>();
                 blip.Embed = relid;
             }
+        }
+
+        /// <summary>
+        /// Stores Excel source link metadata in the picture's custom properties
+        /// </summary>
+        /// <param name="picture">The picture to add metadata to</param>
+        /// <param name="linkInfo">Excel link information</param>
+        public static void SetExcelLinkMetadata(this P.Picture picture, ExcelLinkInfo linkInfo)
+        {
+            if (picture == null)
+                throw new ArgumentNullException(nameof(picture));
+            if (linkInfo == null)
+                throw new ArgumentNullException(nameof(linkInfo));
+
+            var nvPicProps = picture.GetFirstChild<P.NonVisualPictureProperties>();
+            if (nvPicProps == null)
+                throw new InvalidOperationException("Picture does not have NonVisualPictureProperties");
+
+            var appNvProps = nvPicProps.GetFirstChild<P.ApplicationNonVisualDrawingProperties>();
+            if (appNvProps == null)
+            {
+                appNvProps = new P.ApplicationNonVisualDrawingProperties();
+                nvPicProps.Append(appNvProps);
+            }
+
+            // Store metadata as a custom tag using PlaceholderShape (repurposing for metadata storage)
+            // Alternative: use extension elements or custom XML parts
+            var metadata = linkInfo.ToMetadataString();
+            
+            // Use NonVisualDrawingProperties Description field to store metadata
+            var nvDrawingProps = nvPicProps.GetFirstChild<P.NonVisualDrawingProperties>();
+            if (nvDrawingProps != null)
+            {
+                // Store in Description with a marker prefix
+                nvDrawingProps.Description = $"DOCL_EXCEL:{metadata}";
+            }
+        }
+
+        /// <summary>
+        /// Retrieves Excel source link metadata from a picture
+        /// </summary>
+        /// <param name="picture">The picture to read metadata from</param>
+        /// <returns>ExcelLinkInfo if metadata exists, null otherwise</returns>
+        public static ExcelLinkInfo? GetExcelLinkMetadata(this P.Picture picture)
+        {
+            if (picture == null)
+                return null;
+
+            var nvPicProps = picture.GetFirstChild<P.NonVisualPictureProperties>();
+            if (nvPicProps == null)
+                return null;
+
+            var nvDrawingProps = nvPicProps.GetFirstChild<P.NonVisualDrawingProperties>();
+            if (nvDrawingProps?.Description == null)
+                return null;
+
+            var description = nvDrawingProps.Description.Value;
+            
+            // Check if it has our marker prefix
+            if (!description.StartsWith("DOCL_EXCEL:"))
+                return null;
+
+            // Extract metadata string (remove prefix)
+            var metadata = description.Substring("DOCL_EXCEL:".Length);
+            
+            return ExcelLinkInfo.FromMetadataString(metadata);
+        }
+
+        /// <summary>
+        /// Checks if a picture has Excel link metadata
+        /// </summary>
+        /// <param name="picture">The picture to check</param>
+        /// <returns>True if Excel link metadata exists</returns>
+        public static bool HasExcelLinkMetadata(this P.Picture picture)
+        {
+            return GetExcelLinkMetadata(picture) != null;
         }
 
     }

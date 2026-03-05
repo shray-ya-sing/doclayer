@@ -332,6 +332,135 @@ namespace DocLayer.Core
         }
 
         /// <summary>
+        /// Inserts an Excel range or chart as an image with metadata linking back to the source
+        /// </summary>
+        /// <param name="slideNumber">The slide number (1-based index)</param>
+        /// <param name="excelFilePath">Full path to the Excel workbook</param>
+        /// <param name="sheetName">Name of the worksheet</param>
+        /// <param name="rangeOrChartName">Cell range (e.g., "A1:D10") or chart object name</param>
+        /// <param name="imageStream">Stream containing the image data (JPEG/PNG)</param>
+        /// <param name="horizontalPosition">Horizontal position in inches (optional, default 1)</param>
+        /// <param name="verticalPosition">Vertical position in inches (optional, default 1)</param>
+        /// <param name="width">Width in inches (optional, uses original size if not specified)</param>
+        /// <param name="height">Height in inches (optional, uses original size if not specified)</param>
+        /// <returns>Name of the inserted picture</returns>
+        public string InsertLinkedExcelImage(
+            int slideNumber,
+            string excelFilePath,
+            string sheetName,
+            string rangeOrChartName,
+            Stream imageStream,
+            double horizontalPosition = 1.0,
+            double verticalPosition = 1.0,
+            double? width = null,
+            double? height = null)
+        {
+            if (string.IsNullOrWhiteSpace(excelFilePath))
+                throw new ArgumentException("Excel file path cannot be empty", nameof(excelFilePath));
+            if (string.IsNullOrWhiteSpace(sheetName))
+                throw new ArgumentException("Sheet name cannot be empty", nameof(sheetName));
+            if (string.IsNullOrWhiteSpace(rangeOrChartName))
+                throw new ArgumentException("Range or chart name cannot be empty", nameof(rangeOrChartName));
+            if (imageStream == null)
+                throw new ArgumentNullException(nameof(imageStream));
+
+            // Get the slide
+            var slide = _presentationDoc.GetSlide(slideNumber);
+            var slidePart = _presentationDoc.GetSlidePart(slideNumber);
+
+            // Add image part and get relationship ID
+            var imagePart = slidePart.AddImagePart(ImagePartType.Jpeg);
+            imageStream.Position = 0;
+            imagePart.FeedData(imageStream);
+            string relationshipId = slidePart.GetIdOfPart(imagePart);
+
+            // Add picture to slide's shape tree
+            var shapeTree = slide.CommonSlideData.ShapeTree;
+            shapeTree.AddPicture(relationshipId, (decimal)horizontalPosition, (decimal)verticalPosition);
+
+            // Get the last added picture (the one we just added)
+            var pictures = slide.CommonSlideData.ShapeTree.Elements<P.Picture>();
+            var picture = pictures.Last();
+
+            // Set size if specified
+            if (width.HasValue && height.HasValue)
+            {
+                picture.SetWidth(width.Value);
+                picture.SetHeight(height.Value);
+            }
+            else if (width.HasValue)
+            {
+                picture.ScaleWidthTo(width.Value);
+            }
+            else if (height.HasValue)
+            {
+                picture.ScaleHeightTo(height.Value);
+            }
+
+            // Create and attach Excel link metadata
+            var linkInfo = new Models.ExcelLinkInfo
+            {
+                FilePath = excelFilePath,
+                SheetName = sheetName,
+                RangeOrChartName = rangeOrChartName,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            picture.SetExcelLinkMetadata(linkInfo);
+
+            // Save changes
+            _presentationDoc.Save();
+
+            return picture.GetName();
+        }
+
+        /// <summary>
+        /// Retrieves Excel link metadata from a picture on a slide
+        /// </summary>
+        /// <param name="slideNumber">The slide number (1-based index)</param>
+        /// <param name="pictureName">Name of the picture</param>
+        /// <returns>ExcelLinkInfo if metadata exists, null otherwise</returns>
+        public Models.ExcelLinkInfo? GetExcelLinkFromImage(int slideNumber, string pictureName)
+        {
+            if (string.IsNullOrWhiteSpace(pictureName))
+                throw new ArgumentException("Picture name cannot be empty", nameof(pictureName));
+
+            var slide = _presentationDoc.GetSlide(slideNumber);
+            
+            try
+            {
+                var picture = slide.GetPicture(pictureName);
+                return picture.GetExcelLinkMetadata();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets all pictures with Excel link metadata on a slide
+        /// </summary>
+        /// <param name="slideNumber">The slide number (1-based index)</param>
+        /// <returns>Dictionary mapping picture name to Excel link info</returns>
+        public Dictionary<string, Models.ExcelLinkInfo> GetAllExcelLinksOnSlide(int slideNumber)
+        {
+            var slide = _presentationDoc.GetSlide(slideNumber);
+            var linkedPictures = new Dictionary<string, Models.ExcelLinkInfo>();
+
+            foreach (var picture in slide.CommonSlideData.ShapeTree.Elements<P.Picture>())
+            {
+                var linkInfo = picture.GetExcelLinkMetadata();
+                if (linkInfo != null)
+                {
+                    linkedPictures[picture.GetName()] = linkInfo;
+                }
+            }
+
+            return linkedPictures;
+        }
+
+        /// <summary>
         /// Disposes the PresentationBuilder and closes the underlying document if owned
         /// </summary>
         public void Dispose()

@@ -185,6 +185,33 @@ namespace OpenXMLExtensions
             else throw new Exception("Table cell properties not found");
         }
 
+
+        /// <summary>
+        /// Set fill color of cell via rgb color hex code
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="rgbColorHex"></param>
+        /// <exception cref="Exception"></exception>
+
+        public static void SetHexFill(this D.TableCell cell, string rgbColorHex)
+        {
+            if (cell.GetFirstChild<D.TableCellProperties>() != null)
+            {
+                D.TableCellProperties props = cell.GetFirstChild<D.TableCellProperties>();
+                if (props.GetFirstChild<D.SolidFill>() != null)
+                {
+                    props.GetFirstChild<D.SolidFill>()?.SetHexFill(rgbColorHex);
+                }
+                else
+                {
+                    D.SolidFill fill = new D.SolidFill();
+                    fill.SetHexFill(rgbColorHex);
+                    props.AddChild(fill);
+                }
+            }
+            else throw new Exception("Table cell properties not found");
+        }
+
         /// <summary>
         /// sets font color of all text in the cell
         /// </summary>

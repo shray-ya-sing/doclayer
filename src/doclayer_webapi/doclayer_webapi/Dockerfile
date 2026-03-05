@@ -1,29 +1,36 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
+# Base stage for running the app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
-# This stage is used to build the service project
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["doclayer_webapi/doclayer_webapi.csproj", "doclayer_webapi/"]
-RUN dotnet restore "./doclayer_webapi/doclayer_webapi.csproj"
+
+# 1. COPY using the full paths from the REPO ROOT
+# Note the 'src/' prefix added to these paths
+COPY ["src/doclayer_webapi/doclayer_webapi/doclayer_webapi.csproj", "src/doclayer_webapi/doclayer_webapi/"]
+COPY ["src/DocLayer.Core/DocLayer.Core/DocLayer.Core.csproj", "src/DocLayer.Core/DocLayer.Core/"]
+
+# 2. Restore
+RUN dotnet restore "src/doclayer_webapi/doclayer_webapi/doclayer_webapi.csproj"
+
+# 3. Copy everything (Respects .dockerignore)
 COPY . .
-WORKDIR "/src/doclayer_webapi"
+
+# 4. Build
+WORKDIR "/src/src/doclayer_webapi/doclayer_webapi"
 RUN dotnet build "./doclayer_webapi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Publish stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./doclayer_webapi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# Final stage
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

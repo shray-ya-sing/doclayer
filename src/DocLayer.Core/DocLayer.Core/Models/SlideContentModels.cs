@@ -68,4 +68,66 @@ namespace DocLayer.Core.Models
     {
         public string? Text { get; set; }
     }
+
+    /// <summary>
+    /// Represents Excel source link metadata for an image in PowerPoint
+    /// </summary>
+    public class ExcelLinkInfo
+    {
+        /// <summary>
+        /// Full file path to the Excel workbook
+        /// </summary>
+        public string FilePath { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Name of the worksheet
+        /// </summary>
+        public string SheetName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Cell range (e.g., "A1:D10") or chart object name
+        /// </summary>
+        public string RangeOrChartName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Timestamp when the link was created
+        /// </summary>
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Serializes to metadata string format: "FilePath|SheetName|Range|Timestamp"
+        /// </summary>
+        public string ToMetadataString()
+        {
+            return $"{FilePath}|{SheetName}|{RangeOrChartName}|{CreatedAt:O}";
+        }
+
+        /// <summary>
+        /// Parses metadata string back to ExcelLinkInfo object
+        /// </summary>
+        public static ExcelLinkInfo? FromMetadataString(string metadata)
+        {
+            if (string.IsNullOrWhiteSpace(metadata))
+                return null;
+
+            var parts = metadata.Split('|');
+            if (parts.Length < 3)
+                return null;
+
+            var linkInfo = new ExcelLinkInfo
+            {
+                FilePath = parts[0],
+                SheetName = parts[1],
+                RangeOrChartName = parts[2]
+            };
+
+            // Parse timestamp if available
+            if (parts.Length >= 4 && DateTime.TryParse(parts[3], out DateTime timestamp))
+            {
+                linkInfo.CreatedAt = timestamp;
+            }
+
+            return linkInfo;
+        }
+    }
 }

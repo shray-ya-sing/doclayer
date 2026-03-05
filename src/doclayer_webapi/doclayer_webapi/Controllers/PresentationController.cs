@@ -4,6 +4,7 @@ using DocLayer.Core;
 using DocLayer.Core.Models;
 using InternalUtilities.Syncfusion;
 using doclayer_webapi.Models;
+using System.IO.Compression;
 
 namespace doclayer_webapi.Controllers
 {
@@ -437,6 +438,47 @@ namespace doclayer_webapi.Controllers
             {
                 _logger.LogError(ex, "Error deleting presentation");
                 return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Export an array of json to a powerpoint .pptx file
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("export")]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult ExportJsonToPptx([FromBody] ExportRequest request)
+        {
+            // Basic validation
+            if (request?.SlideJsonArray == null || request.SlideJsonArray.Count == 0)
+            {
+                return BadRequest("No slide data provided.");
+            }
+
+            try
+            {
+                _logger.LogInformation("Exporting {Count} slides to pptx", request.SlideJsonArray.Count);
+
+                var exporter = new PresentationExporter();
+                var fileBytes = exporter.ExportPptxBytesFromJsonArray(request.SlideJsonArray);
+
+                // Sanitize the filename (remove invalid chars if necessary)
+                var fileName = string.IsNullOrWhiteSpace(request.PresentationName)
+                    ? "Presentation"
+                    : request.PresentationName;
+
+                return File(
+                    fileBytes,  
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    $"{fileName}.pptx"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting JSON to PPTX");
+                return BadRequest(new { error = "An error occurred generating the presentation." });
             }
         }
     }

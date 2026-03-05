@@ -167,5 +167,48 @@ namespace OpenXMLExtensions
 
 
         }
+
+        public static SlidePart AddNewSlide(this PresentationDocument presentationDocument)
+        {
+            PresentationPart presentationPart = presentationDocument.PresentationPart
+                ?? throw new InvalidOperationException("PresentationPart is missing.");
+
+            // 1. Create a new SlidePart
+            SlidePart newSlidePart = presentationPart.AddNewPart<SlidePart>();
+            newSlidePart.Slide = new Slide(new CommonSlideData(new ShapeTree()));
+
+            // 2. Find the first SlideLayoutPart (usually "Title Slide") to link to
+            // If you want a specific layout (like "Blank"), you'd filter by Name here.
+            SlideLayoutPart layoutPart = presentationPart.SlideMasterParts
+                .SelectMany(m => m.SlideLayoutParts)
+                .First();
+
+            newSlidePart.AddPart(layoutPart);
+
+            // 3. Update the SlideIdList in the Presentation
+            Presentation presentation = presentationPart.Presentation;
+            if (presentation.SlideIdList == null)
+            {
+                presentation.SlideIdList = new SlideIdList();
+            }
+
+            // Determine a unique ID (IDs must be >= 256)
+            uint maxId = 256;
+            SlideId? lastSlideId = presentation.SlideIdList.Elements<SlideId>().LastOrDefault();
+            if (lastSlideId != null && lastSlideId.Id is not null)
+            {
+                maxId = lastSlideId.Id + 1;
+            }
+
+            // Add the new slide to the list
+            SlideId newSlideId = new SlideId
+            {
+                Id = maxId,
+                RelationshipId = presentationPart.GetIdOfPart(newSlidePart)
+            };
+            presentation.SlideIdList.Append(newSlideId);
+
+            return newSlidePart;
+        }
     }
 }
