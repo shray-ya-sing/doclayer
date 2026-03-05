@@ -1,0 +1,33 @@
+# 1. Ignore heavy non-C# folders
+docs/
+examples/
+mcp-server/
+python-wrapper/
+typescript-wrapper/
+test/
+node_modules/
+
+# 2. Ignore IDE and OS junk
+.vs/
+.vscode/
+.idea/
+.classpath
+.project
+.settings
+**/*.user
+**/*.dbmdl
+
+# 3. Ignore Build Artifacts (VERY IMPORTANT)
+# You don't want your local 'bin' or 'obj' folders uploaded to the Linux container
+**/bin/
+**/obj/
+
+# 4. Ignore Docker files themselves
+docker-compose*
+**/.dockerignore
+
+# 5. Keep only the essentials
+# We usually ignore .git entirely to keep the build context small
+.git/
+LICENSE
+README.md
