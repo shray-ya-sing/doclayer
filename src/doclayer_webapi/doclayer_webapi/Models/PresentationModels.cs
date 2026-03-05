@@ -1,4 +1,5 @@
 using DocLayer.Core;
+using System.Text.Json.Serialization;
 
 namespace doclayer_webapi.Models
 {
@@ -17,9 +18,11 @@ namespace doclayer_webapi.Models
     /// </summary>
     public class ExportRequest
     {
+        [JsonPropertyName("slideJsonArray")]
         public required List<SlideSchema> SlideJsonArray { get; set; }
 
-        public required string PresentationName { get; set; }
+        [JsonPropertyName("presentationName")]
+        public string? PresentationName { get; set; }
     }
 
     /// <summary>
